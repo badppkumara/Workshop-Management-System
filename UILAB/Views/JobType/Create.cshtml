@@ -1,0 +1,126 @@
+﻿@model UILAB.Models.JobTypeTB
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["errorMessage"]' != "") {
+            $("#ErrorMsg").show();
+        }
+        else {
+            $("#ErrorMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["successMsg"]' != "") {
+            $("#SuccessMsg").show();
+            $('#SuccessMsg').delay(4000).hide(0);
+        }
+        else {
+            $("#SuccessMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["buttonMsg"]' != "") {
+            $("#ButtonMsg").show();
+        }
+        else {
+            $("#ButtonMsg").hide();
+        }
+    });
+</script>
+
+@using (Html.BeginForm("Create", "JobType", FormMethod.Post, new { enctype = "multipart/form-data", @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.JobTypeID)
+
+    <div class="demo-form-wrapper">
+        <h4>@ViewBag.SubmitHeader</h4>
+        <hr style="margin-top:5px" />
+
+        <div class="form-group form-group-sm">
+            <label>Category <span style="color: red">*</span></label>
+            <div>
+                @Html.EditorFor(model => model.JobTypeName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.JobTypeName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            <label>Approval Scheme Item <span style="color: red">*</span></label>
+            <div>
+                @{
+                    if (((IEnumerable<dynamic>)ViewBag.List).Count() > 1)
+                    {
+                        @Html.DropDownListFor(model => model.ApprovalSettingID, ViewBag.List as SelectList, "--- Select Approval ---", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ApprovalSettingID, "", new { @class = "text-danger" })
+                    }
+                    else
+                    {
+                        @Html.DropDownListFor(model => model.ApprovalSettingID, ViewBag.List as SelectList, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ApprovalSettingID, "", new { @class = "text-danger" })
+                    }
+                }                
+            </div>
+        </div>
+
+        <div class="form-group" id="ErrorMsg" hidden="hidden">
+            <div class="alert alert-danger">
+                <span class="sidenav-icon icon icon-question-circle"></span> Category <strong>"@TempData["errorMessage"]"</strong> Exists...!
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            <input type="submit" class="btn btn-primary" id="btnSave" name="SaveEntry" value="@ViewBag.SubmitValue" />
+            <a href="~/JobType/List" class="btn btn-warning" id="ButtonMsg">Clear </a>
+        </div>
+
+        <div class="form-group" id="SuccessMsg" hidden="hidden">
+            <div class="alert alert-success">
+                <span class="sidenav-icon icon icon-thumbs-up"></span> @TempData["successMsg"]
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#CreateFormID').validate({
+            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+            errorElement: 'div',
+            errorPlacement: function (error, e) {
+                e.parents('.form-group > div').append(error);
+            },
+            highlight: function (e) {
+
+                $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                $(e).closest('.help-block').remove();
+            },
+            success: function (e) {
+                e.closest('.form-group').removeClass('has-success has-error');
+                e.closest('.help-block').remove();
+            },
+            rules: {
+                'JobTypeName': {
+                    required: true,
+                },
+                'ApprovalSettingID': {
+                    required: true,
+                }
+            },
+            messages: {
+                'JobTypeName': 'This Field Required'
+            },
+            messages: {
+                'ApprovalSettingID': 'This Field Required'
+            }
+        });
+    });
+</script>

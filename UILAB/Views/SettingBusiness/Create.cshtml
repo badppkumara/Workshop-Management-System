@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            @Html.ActionLink("Dashboard", "Dashboard", "Admin") | @Html.ActionLink("Employees", "List", "Employee") | @TempData["username"]
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Business Settings</span></h5>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    @Html.ActionLink("Back to List", "List", null, new { @class = "btn btn-sm btn-success" })
+                </div>
+                <div class="card-body">
+
+                    <!-- tabs left -->
+                    <div class="tabbable tabs-left">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#a" data-toggle="tab">Business Settings</a></li>
+                            <li><a href="#b" data-toggle="tab">Business Localization &Files</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="a">@Html.Action("BusinessInfo")</div>
+                            <div class="tab-pane" id="b">@*@Html.Action("Security")*@</div>
+                        </div>
+                    </div>
+                    <!-- /tabs -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

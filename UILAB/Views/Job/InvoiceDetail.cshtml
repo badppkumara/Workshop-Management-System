@@ -1,0 +1,232 @@
+﻿@model UILAB.Models.vw_SalesInvoiceTR
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "InvoiceDetail";
+    Layout = null;
+}
+
+<!-- Print -->
+<script type="text/javascript">
+    $(function () {
+        $("#btnPrint2").click(function () {
+            var contents = $("#dvContents2").html();
+            var frame1 = $('<iframe />');
+            frame1[0].name = "frame1";
+            frame1.css({ "position": "absolute", "top": "-1000000px" });
+            $("body").append(frame1);
+            var frameDoc = frame1[0].contentWindow ? frame1[0].contentWindow : frame1[0].contentDocument.document ? frame1[0].contentDocument.document : frame1[0].contentDocument;
+            frameDoc.document.open();
+            //Create a new HTML document.
+            frameDoc.document.write('<html><head><title><%: Page.Title %> - Perfect HRMS</title>');
+            frameDoc.document.write('</head><body>');
+            //Append the external CSS file.
+            frameDoc.document.write('<link href="../../Content/css/application.min.css" rel="stylesheet" type="text/css" />');
+            frameDoc.document.write('<link href="../../Content/css/elephant.min.css" rel="stylesheet" type="text/css" />');
+            frameDoc.document.write('<link href="../../Content/css/vendor.min.css" rel="stylesheet" type="text/css" />');
+            frameDoc.document.write('<link href="../../Content/css/demo.min.css" rel="stylesheet" type="text/css" />');
+            frameDoc.document.write('<link rel="stylesheet" href="../../Content/css/demo.min.css">');
+            //Append the DIV contents.
+            frameDoc.document.write(contents);
+            frameDoc.document.write('</body></html>');
+            frameDoc.document.close();
+            setTimeout(function () {
+                window.frames["frame1"].focus();
+                window.frames["frame1"].print();
+                frame1.remove();
+            }, 500);
+        });
+    });
+</script>
+<div class="card-body">
+    <div class="row">
+        <div class="col-xs-6 col-md-6">
+            <h4>
+                @Model.JobTRID
+                -
+                @Model.StatusName
+            </h4>
+
+        </div>
+        <div class="col-xs-6 col-md-6" style="text-align: right;">
+            @{
+                using (var db = new DatabaseContext())
+                {
+                    var result = db.Customers.SingleOrDefault(b => b.CustomerID == Model.CustomerID);
+
+                    if (result != null)
+                    {
+                        if (result.Email != "")
+                        {
+                            <button class="btn btn-xs btn-outline-danger" type="button" id="btnEmail" style="margin-right: -2px;">
+                                <span class="icon icon-envelope icon-sm icon-fw "></span>Email to Customer
+                            </button>
+                        }
+                    }
+                }
+            }
+
+            <button class="btn btn-xs btn-outline-danger" type="button" id="btnPrint2" style="margin-right: -2px;">
+                <span class="icon icon-print icon-sm icon-fw "></span> Print
+            </button>
+
+        </div>
+    </div>
+    <div id="dvContents2">
+        <div class="row" style="font-size:small">
+            <div class="col-xs-8 col-md-8">
+                <img src="~/Content/img/Dracevich-Logo.png" width="250" />
+            </div>
+            <div class="col-xs-4 col-md-4" style="text-align-last:right">
+                @{
+                    if (Model.StatusID == 3)
+                    {
+                        <h3><span class="label label-outline-danger text-uppercase">@Html.Encode("UnPaid")</span></h3>
+                    }
+                    if (Model.StatusID == 1)
+                    {
+                        <h3><span class="label label-outline-success text-uppercase">@Html.Encode("Paid")</span></h3>
+                    }
+                    if (Model.StatusID == 2)
+                    {
+                        <h3>
+                            <span class="label label-outline-warning text-uppercase">@Html.Encode("Partialy Paid")</span>
+                        </h3>
+                    }
+                    if (Model.StatusID == 4)
+                    {
+                        <h3>
+                            <span class="label label-outline-info text-uppercase">@Html.Encode("Withdrawn")</span>
+                        </h3>
+                    }
+                    if (Model.StatusID == 5)
+                    {
+                        <h3>
+                            <span class="label label-outline-default text-uppercase">@Html.Encode("Credited")</span>
+                        </h3>
+                    }
+                }
+            </div>
+        </div>
+        <div class="row" style="margin-top: 10px; margin-bottom: 20px; text-align:center; font-size:small">
+        </div>
+        <div class="row" style="font-size:small">
+            <div class="col-xs-7 col-md-7">
+
+
+                @Model.FirstName @Model.LastName<br />
+                @Model.Address1 @Model.Address2 @Model.Address3 <br />
+                @Model.Mobile<br />
+                @Model.Email
+            </div>
+
+            <div class="col-xs-5 col-md-5" style="text-align: right">
+                <strong>Address : </strong>@TempData["address1"] @TempData["address2"] <br />
+                @TempData["address3"], New Zealand @TempData["postal"]<br />
+                <strong>Phone : </strong>@TempData["phone"]<br />
+                <strong>Email : </strong>@TempData["email"]<br />
+                <strong>GST / IRD #: </strong>@TempData["gst"]<br />
+                <strong>Bank Acc #: </strong>@TempData["acc"]<br />
+                <strong>Invoice Date: </strong>@Convert.ToDateTime(Model.LastModifyDate).ToString("dd/MM/yyyy")<br />
+                <strong>Tax Invoice #: </strong>@Model.InvoiceNo<br />
+                <br />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-borderless" style="font-size:13px">
+                        <thead>
+                            <tr style="border-top:1px solid">
+                                <th class="text-left" width="500px" style="background-color:#F1EDEC; border-bottom:1px solid">Description</th>
+                                <th class="text-center" width="70px" style="background-color:#F1EDEC; border-bottom:1px solid">Qty</th>
+                                <th class="text-right" width="100px" style="background-color:#F1EDEC; border-bottom:1px solid">Unit price</th>
+                                <th class="text-right" width="100px" style="background-color:#F1EDEC; border-bottom:1px solid">Amount NZD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom:solid 1px #CBCBCB">
+                                <td colspan="1">
+                                    <strong>Vehicle :</strong> @Model.Make @Model.ModelName @Model.Year<br />
+                                    <strong>Rego :</strong> @Model.PlateNo | <strong>OD :</strong> @Model.Milage
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr style="border-bottom:solid 1px #CBCBCB">
+                                <td colspan="1">
+                                    <strong>Repair :</strong><br />
+                                    @TempData["repairnote"]
+                                </td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-right"><br />@TempData["repair"]</td>
+                            </tr>
+                            <tr style="border-bottom:solid 1px #CBCBCB">
+                                <td colspan="1">
+                                    <strong>Parts :</strong> <br />@TempData["partnote"]
+                                </td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-right"><br />@TempData["partamount"]</td>
+                            </tr>
+                            <tr style="border-bottom:solid 1px #CBCBCB">
+                                <td colspan="1">
+                                    <strong>Materials: </strong> <br />@TempData["materialnote"]
+                                </td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-right"><br />@TempData["material"]</td>
+                            </tr>
+                            <tr style="border-bottom:solid 1px #CBCBCB">
+                                <td colspan="1">
+                                    <strong>Miscellaneous :</strong> <br />
+                                    @TempData["miscellnote"]<br />
+                                    Freight<br />
+                                    <strong>Sub Total</strong>
+                                </td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-right">
+                                    <br />
+                                    @TempData["miscellamount"] <br />
+                                    @TempData["freight"] <br />
+                                    <strong>@TempData["miscubtotal"]</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1"><br /></td>
+                                <td class="text-right">
+                                <th scope="row">
+                                    <div class="text-right">
+                                        Grand Total
+                                        <br> Total GST
+                                        <br> Invoice Total
+                                    </div>
+                                </th>
+
+                                <td class="text-right">
+                                    <strong>@Convert.ToDouble(Model.SubTotal).ToString("#,##0.00")</strong>
+                                    <br> @Convert.ToDouble(Model.GST).ToString("#,##0.00")
+                                    <br> @Convert.ToDouble(Model.Total).ToString("#,##0.00")
+                                </td>
+                            </tr>
+                            <tr style="border-bottom:1px solid; border-top:1px solid">
+                                <td style="background-color:#F1EDEC">
+                                    <strong>Due Date :</strong> @Convert.ToDateTime(TempData["duedate"]).ToString("dd/MM/yyyy")
+                                </td>
+                                <th scope="row" colspan="2" style="background-color:#F1EDEC">
+                                    <div class="text-right">
+                                        Total Due
+                                    </div>
+                                </th>
+                                <td class="text-right" style="background-color:#F1EDEC"><strong>@Convert.ToDouble(Model.TotalNet).ToString("#,##0.00")</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

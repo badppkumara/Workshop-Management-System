@@ -1,0 +1,164 @@
+﻿@model UILAB.Models.vw_JobTR
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_LayoutEmp.cshtml";
+}
+
+<!-- Print -->
+<script type="text/javascript">
+    $(function () {
+        $("#btnPrint").click(function () {
+            var contents = $("#dvContents").html();
+            var frame1 = $('<iframe />');
+            frame1[0].name = "frame1";
+            frame1.css({ "position": "absolute", "top": "-1000000px" });
+            $("body").append(frame1);
+            var frameDoc = frame1[0].contentWindow ? frame1[0].contentWindow : frame1[0].contentDocument.document ? frame1[0].contentDocument.document : frame1[0].contentDocument;
+            frameDoc.document.open();
+            //Create a new HTML document.
+            frameDoc.document.write('<html><head><title><%: Page.Title %> - Perfect HRMS</title>');
+            frameDoc.document.write('</head><body>');
+            //Append the external CSS file.
+            frameDoc.document.write('<link href="~/Content/css/application.min.css" rel="stylesheet" type="text/css" />');
+            frameDoc.document.write('<link href="~/Content/css/elephant.min.css" rel="stylesheet" type="text/css" />');
+            frameDoc.document.write('<link href="~/Content/css/vendor.min.css" rel="stylesheet" type="text/css" />');
+            frameDoc.document.write('<link href="~/Content/css/demo.min.css" rel="stylesheet" type="text/css" />');
+            frameDoc.document.write('<link rel="stylesheet" href="~/Content/css/demo.min.css">');
+            //Append the DIV contents.
+            frameDoc.document.write(contents);
+            frameDoc.document.write('</body></html>');
+            frameDoc.document.close();
+            setTimeout(function () {
+                window.frames["frame1"].focus();
+                window.frames["frame1"].print();
+                frame1.remove();
+            }, 500);
+        });
+    });
+</script>
+
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Emp/Dashboard">Dashboard</a> | <a href="~/EmpJob/List">Jobs</a> | @Model.JobTRID
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">@Model.JobTRID</span></h5>
+    </div>
+    <div class="row" id="demo-inputmask">
+        <div class="col-md-12">
+            <div class="panel m-b-lg">
+
+                <ul class="nav nav-tabs" id="myTab">
+                    <li class="active">
+                        <a href="#tab1" data-toggle="tab">Overview</a>
+                    </li>
+                    <li>
+                        <a href="#tab2" data-toggle="tab">Invoice</a>
+                    </li>
+                    <li>
+                        <a href="#tab3" data-toggle="tab">Parts</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="tab1">
+                        <div class="card-body">
+                            <div id="dvContents">
+                                <div class="row">
+                                    <div class="col-xs-6 col-md-6">
+                                        <img src="~/Content/img/Dracevich-Logo.png" height="80" />
+                                        <br /><br />
+                                        <h4>@Model.JobTRID - @Model.PlateNo (<span style="color:brown">@Model.StatusName</span>)</h4>
+                                        <h2></h2>
+
+                                    </div>
+                                    <div class="col-xs-6 col-md-6" style="text-align: right;">
+                                        <button class="btn btn-xs btn-danger" type="button" id="btnPrint" style="margin-right: -2px;" data-rel="tooltip" data-toggle="tooltip" data-placement="bottom" title="Print">
+                                            <span class="icon icon-print icon-sm icon-fw "></span>
+                                        </button>
+                                        <button class="btn btn-xs btn-danger" type="button" id="btnExcelAttendance" style="margin-right: -2px;" data-rel="tooltip" data-toggle="tooltip" data-placement="bottom" title="Excel">
+                                            <span class="icon icon-file-excel-o icon-sm icon-fw "></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 col-md-12">
+                                        <table id="" class="table table-bordered table-nowrap" cellspacing="0" width="100%">
+                                            <thead>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <strong>Customer Information</strong> <br />
+                                                        @Model.FirstName @Model.LastName <br />
+                                                        @Model.Company <br />
+                                                        @TempData["Address1"] @TempData["Address2"] @TempData["Address3"]
+                                                        <br />
+                                                        @TempData["PostalNo"]<br />
+                                                        Mobile: @Model.Mobile <br />
+                                                        Email: @Model.Email
+                                                    </td>
+                                                    <td width="50%">
+                                                        <strong>Vehicle Information</strong> <br />
+                                                        @Model.PlateNo <br />
+                                                        @Model.Make @Model.ModelName @Model.Year <br /><br />
+                                                        <strong>Type:</strong> @Model.ModelType | <strong>Colour:</strong> <br />
+                                                        <strong>Mileage:</strong> @Model.Milage | <strong>Hubo:</strong> @Model.Hubo | <strong>RUC:</strong> @Model.RUC <br />
+                                                        <strong>Engine No:</strong> @Model.EngineNo | <strong>VIN No:</strong> @Model.ChassisNo
+                                                    </td>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h4>Job Tasks</h4>
+                                        <div class="table-responsive">
+                                            @Html.Action("DetailJobList")
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row">
+                                    <div class="col-xs-6 col-md-6">
+                                        <h4>Materials</h4>
+                                        <div class="table-responsive">
+                                            @Html.Action("ViewParts")
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6 col-md-6">
+                                        <table id="" class="table table-bordered table-nowrap" cellspacing="0" width="100%">
+                                            <thead>
+                                                <tr>
+                                                    <td>
+                                                        Date: @Convert.ToDateTime(DateTime.Now).ToString("dd-MM-yyyy : HH.mm") <br />
+                                                    </td>
+                                                </tr>
+                                                <tr><td>Preapared By:</td></tr>
+                                                <tr><td>Approved By:</td></tr>
+                                            </thead>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab2">asdas</div>
+                    <div class="tab-pane fade" id="tab3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-12">
+                                    <div class="table-responsive">
+                                        @Html.Action("ViewParts")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

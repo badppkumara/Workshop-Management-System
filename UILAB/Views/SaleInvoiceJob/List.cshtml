@@ -1,0 +1,242 @@
+﻿@model IEnumerable<UILAB.Models.vw_SalesInvoiceTR>
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["Error"]' != "") {
+            $("#errorMsg").show();
+        }
+        else {
+            $("#errorMsg").hide();
+        }
+    });
+
+    var flag = "@TempData["Success"]";
+    var flag2 = "@TempData["Deleted"]";
+    var flag3 = "@TempData["Updated"]";
+
+    if (flag == "Success") {
+        toastr.success('Success!... Item Created')
+    }
+
+    if (flag2 == "Deleted") {
+        toastr.error('Success!... Item Deleted')
+    }
+
+    if (flag3 == "Updated") {
+        toastr.success('Success!... Item Updated')
+    }
+
+</script>
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Admin/Dashboard">Dashboard</a> | Invoices
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Invoices</span></h5>
+    </div>
+    <div class="row gutter-xs">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    @Html.ActionLink("Create Invoice", "Create", null, new { @class = "btn btn-sm btn-success" })
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger" id="errorMsg">
+                        <strong>Error!</strong> @TempData["Error"]
+                    </div>
+                    <div class="table-responsive">
+                        <table id="myTable" class="table table-bordered table-striped table-nowrap dataTable" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center">
+                                        Invoice No
+                                    </th>
+                                    <th style="text-align:center">
+                                        Job No
+                                    </th>
+                                    <th style="text-align:center">
+                                        Plate No
+                                    </th>
+                                    <th style="text-align:center">
+                                        Sub Total
+                                    </th>
+                                    <th style="text-align:center">
+                                        GST
+                                    </th>
+                                    <th style="text-align:center">
+                                        Total Amount
+                                    </th>
+                                    <th style="text-align:center">
+                                        Total Net Amount
+                                    </th>
+                                    <th style="text-align:center">
+                                        Status
+                                    </th>
+                                    <th style="text-align:center">Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td style="font-size: small; text-align:center">
+                                            @Html.DisplayFor(modelItem => item.InvoiceNo)
+                                        </td>
+                                        <td style="font-size: small; text-align:center">
+                                            @Html.DisplayFor(modelItem => item.JobTRID)
+                                        </td>
+                                        <td style="font-size: small; text-align:center">
+                                            @Html.DisplayFor(modelItem => item.PlateNo)
+                                        </td>
+                                        <td style="font-size: small; text-align:right">
+                                            @Html.DisplayFor(modelItem => item.SubTotal)
+                                        </td>
+                                        <td style="font-size: small; text-align:right">
+                                            @Html.DisplayFor(modelItem => item.GST)
+                                        </td>
+                                        <td style="font-size: small; text-align:right">
+                                            @Html.DisplayFor(modelItem => item.Total)
+                                        </td>
+                                        <td style="font-size: small; text-align:right">
+                                            @Html.DisplayFor(modelItem => item.TotalNet)
+                                        </td>
+
+                                        @{
+                                            using (var db = new DatabaseContext())
+                                            {
+                                                var result = db.SalesInvoiceTRs.SingleOrDefault(b => b.InvoiceID == item.InvoiceID);
+
+                                                <td style="font-size: small; text-align:center">
+                                                    @{
+                                                        if (result != null)
+                                                        {
+                                                            if (item.StatusID == 1)
+                                                            {
+                                                                <span class="label label-outline-success">@Html.Encode("Paid")</span>
+                                                            }
+                                                            if (item.StatusID == 2)
+                                                            {
+                                                                <span class="label label-outline-warning">@Html.Encode("Partial")</span>
+                                                            }
+                                                            if (item.StatusID == 3)
+                                                            {
+                                                                <span class="label label-outline-danger">@Html.Encode("UnPaid")</span>
+                                                            }
+                                                            if (item.StatusID == 4)
+                                                            {
+                                                                <span class="label label-outline-default">@Html.Encode("Withdrawn")</span>
+                                                            }
+                                                            if (item.StatusID == 5)
+                                                            {
+                                                                <span class="label label-outline-default">@Html.Encode("Credit")</span>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="label label-outline-danger">@Html.Encode("Error")</span>
+                                                        }
+                                                    }
+                                                </td>
+                                                <td style="text-align:right">
+                                                    @Html.ActionLink("View", "Details", new { id = item.InvoiceID }, new { @class = "btn btn-xs btn-outline-info" })
+                                                    @*@{
+                                                            if (result != null)
+                                                            {
+                                                                if (item.InvoiceStatus == "UnPaid")
+                                                                {
+                                                                    @Html.ActionLink("Update Invoice", "UpdateInvoice", new { id = item.InvoiceID }, new { @class = "btn btn-xs btn-outline-warning" })
+                                                                }
+                                                                if (item.InvoiceStatus == "Partial")
+                                                                {
+                                                                    @Html.ActionLink("Update Invoice", "UpdateInvoice", new { id = item.InvoiceID }, new { @class = "btn btn-xs btn-outline-warning" })
+                                                                }
+                                                                if (item.InvoiceStatus == "Paid")
+                                                                {
+                                                                    <span style="margin-right:2px">@Html.ActionLink("Update", "UpdateInvoice", new { id = item.InvoiceID }, new { @class = "btn btn-xs btn-outline-warning" })</span>
+                                                                    @Html.ActionLink("View", "ViewInvoice", new { id = item.InvoiceID }, new { @class = "btn btn-xs btn-info" })
+                                                                }
+                                                                if (item.InvoiceStatus == "Withdrawn")
+                                                                {
+                                                                    <span style="margin-right:2px">@Html.ActionLink("Update", "UpdateInvoice", new { id = item.InvoiceID }, new { @class = "btn btn-xs btn-outline-warning" })</span>
+                                                                    @Html.ActionLink("View", "ViewInvoice", new { id = item.InvoiceID }, new { @class = "btn btn-xs btn-info" })
+                                                                }
+                                                                if (item.InvoiceStatus == "Credit")
+                                                                {
+                                                                    @Html.ActionLink("Settle Invoice", "UpdateInvoice", new { id = item.InvoiceID }, new { @class = "btn btn-xs btn-outline-warning" })
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="hidden"></span>
+                                                            }
+                                                        }*@
+
+                                                </td>
+                                                        }
+                                        }
+                                    </tr>
+                                                        }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to delete one track, this procedure is irreversible.</p>
+                <p>Do you want to proceed?</p>
+                <p class="debug-url"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger" data-dismiss="modal" type="button" onclick="Delete()">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*hidden field for storing current Id*@
+<input type="hidden" id="hiddenId" />
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({ order: [[0, "desc"]] });
+    });
+
+    // ------------------- Delete Item -------------------
+    var DeleteData = function (ResultId) {
+        $("#hiddenId").val(ResultId);
+        $("#myModal").modal('show');
+    }
+
+    var Delete = function () {
+        var empId = $("#hiddenId").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/SaleInvoice/Delete",
+            data: { Id: empId },
+            success: function (result) {
+                $("#myModal").modal("hide");
+                window.location.replace("List", "SaleInvoice");
+            }
+        })
+    }
+    //--------------------------------------------------------
+</script>

@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "LinkError";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<link href="~/Content/css/errors.css" rel="stylesheet" />
+<div class="error">
+    <div class="error-body">
+        <h1 class="error-heading">Page Not Found</h1>
+        <h4 class="error-subheading">We are sorry, the page you requested cannot be found.</h4>
+        <p>
+            <small>The URL may be misspelled or the page you're looking for is no longer available. </small>
+        </p>
+        <p><a class="btn btn-primary btn-pill btn-thick" href="/Admin/Dashboard">Return to homepage</a></p>
+    </div>
+    <div class="error-footer">
+
+        <p>
+            <small class="copyright">@DateTime.Now.Year &copy; Developed By <a href="#">UILABS</a></small>
+        </p>
+    </div>
+</div>
+
+

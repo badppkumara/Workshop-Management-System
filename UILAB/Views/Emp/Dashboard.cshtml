@@ -1,0 +1,215 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutEmp.cshtml";
+}
+
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <select class="selectpicker dropdown" name="period" data-dropdown-align-right="true" data-style="btn-default btn-sm" data-width="fit">
+                <option value="#" selected="selected"><span class="icon icon-plus icon-lg icon-fw"></span>Quick Add</option>
+                <option value="today">Add a Vehicle</option>
+                <option value="yesterday">Create a Custom Job</option>
+            </select>
+        </div>
+        <h1 class="title-bar-title">
+            <span class="d-ib">Dashboard</span>
+            @*<span class="d-ib">
+                <a class="title-bar-shortcut" href="#" title="Add to shortcut list" data-container="body" data-toggle-text="Remove from shortcut list" data-trigger="hover" data-placement="right" data-toggle="tooltip">
+                    <span class="sr-only">Add to shortcut list</span>
+                </a>
+            </span>*@
+        </h1>
+        @*<p class="title-bar-description">
+            <small>You can personalize your dashboard by using <a href="widgets.html">widgets</a>.</small>
+        </p>*@
+    </div>
+
+    <div class="row gutter-xs">
+        <div class="col-md-3">
+            <div class="card bg-primary">
+                <div class="card-body">
+                    <div class="media">
+                        <div class="media-middle media-left">
+                            <span class="bg-success-inverse circle sq-48">
+                                <span class="icon icon-users"></span>
+                            </span>
+                        </div>
+                        <div class="media-middle media-body">
+                            <h6 class="media-heading">Employees</h6>
+                            <h3 class="media-heading">
+                                <span class="fw-l">@TempData["employees"]</span>
+                            </h3>
+                        </div>
+                        <div class="media-middle media-body">
+                            <h6 class="media-heading">Customers</h6>
+                            <h3 class="media-heading">
+                                <span class="fw-l">@TempData["customers"]</span>
+                            </h3>
+                        </div>
+                        <div class="media-middle media-body">
+                            <h6 class="media-heading">Vendors</h6>
+                            <h3 class="media-heading">
+                                <span class="fw-l">@TempData["suppliers"]</span>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-default">
+                <div class="card-body">
+                    <div class="media">
+                        <div class="media-middle media-left">
+                            <span class="bg-success-inverse circle sq-48">
+                                <span class="icon icon-tasks"></span>
+                            </span>
+                        </div>
+                        <div class="media-middle media-body">
+                            <h6 class="media-heading">Job Pending</h6>
+                            <h3 class="media-heading">
+                                <span class="fw-l">@TempData["jobpending"]</span>
+                            </h3>
+                        </div>
+                        <div class="media-middle media-body">
+                            <h6 class="media-heading">Job Open</h6>
+                            <h3 class="media-heading">
+                                <span class="fw-l">@TempData["jobopen"]</span>
+                            </h3>
+                        </div>
+                        <div class="media-middle media-body">
+                            <h6 class="media-heading">Job Complete</h6>
+                            <h3 class="media-heading">
+                                <span class="fw-l">@TempData["jobcomplete"]</span>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning">
+                <div class="card-body">
+                    <div class="media">
+                        <div class="media-middle media-left">
+                            <span class="bg-success-inverse circle sq-48">
+                                <span class="icon icon-dollar"></span>
+                            </span>
+                        </div>
+                        <div class="media-middle media-body">
+                            <h6 class="media-heading">Pending</h6>
+                            <h3 class="media-heading">
+                                <span class="fw-l">@TempData["pendingjob"]</span>
+                            </h3>
+                        </div>
+                        <div class="media-middle media-body">
+                            <h6 class="media-heading">Current</h6>
+                            <h3 class="media-heading">
+                                <span class="fw-l">@TempData["currentjob"]</span>
+                            </h3>
+                        </div>
+                        <div class="media-middle media-body">
+                            <h6 class="media-heading">Complete</h6>
+                            <h3 class="media-heading">
+                                <span class="fw-l">@TempData["completejob"]</span>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success">
+                <div class="card-body">
+                    <div class="media">
+                        <div class="media-middle media-left">
+                            <span class="bg-success-inverse circle sq-48">
+                                <span class="icon icon-dropbox"></span>
+                            </span>
+                        </div>
+                        <div class="media-middle media-body">
+                            <h6 class="media-heading">Products</h6>
+                            <h3 class="media-heading">
+                                <span class="fw-l">@TempData["pendingjob"]</span>
+                            </h3>
+                        </div>
+                        <div class="media-middle media-body">
+                            <h6 class="media-heading">Current</h6>
+                            <h3 class="media-heading">
+                                <span class="fw-l">@TempData["currentjob"]</span>
+                            </h3>
+                        </div>
+                        <div class="media-middle media-body">
+                            <h6 class="media-heading">Complete</h6>
+                            <h3 class="media-heading">
+                                <span class="fw-l">@TempData["completejob"]</span>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div class="col-md-2">
+                <div class="card bg-info">
+                    <div class="card-body">
+                        <div class="media">
+                            <div class="media-middle media-left">
+                                <span class="bg-info-inverse circle sq-48">
+                                    <span class="icon icon-user"></span>
+                                </span>
+                            </div>
+                            <div class="media-middle media-body">
+                                <h6 class="media-heading">Employees</h6>
+                                <h3 class="media-heading">
+                                    <span class="fw-l">1,031,760</span>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card bg-info">
+                    <div class="card-body">
+                        <div class="media">
+                            <div class="media-middle media-left">
+                                <span class="bg-info-inverse circle sq-48">
+                                    <span class="icon icon-user"></span>
+                                </span>
+                            </div>
+                            <div class="media-middle media-body">
+                                <h6 class="media-heading">Employees</h6>
+                                <h3 class="media-heading">
+                                    <span class="fw-l">1,031,760</span>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card bg-info">
+                    <div class="card-body">
+                        <div class="media">
+                            <div class="media-middle media-left">
+                                <span class="bg-info-inverse circle sq-48">
+                                    <span class="icon icon-user"></span>
+                                </span>
+                            </div>
+                            <div class="media-middle media-body">
+                                <h6 class="media-heading">Employees</h6>
+                                <h3 class="media-heading">
+                                    <span class="fw-l">1,031,760</span>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+    </div>
+
+</div>
+

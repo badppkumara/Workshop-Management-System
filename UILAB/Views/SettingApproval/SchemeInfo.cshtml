@@ -1,0 +1,112 @@
+﻿@model IEnumerable<UILAB.Models.ApprovalSchemeMaster>
+@{
+    ViewBag.Title = "SchemeInfo";
+    Layout = null;
+}
+
+
+<script type="text/javascript">
+
+    var flag = "@TempData["Success"]";
+    var flag2 = "@TempData["Deleted"]";
+    var flag3 = "@TempData["Updated"]";
+
+    if (flag == "Success") {
+        toastr.success('Success!... Item Created')
+    }
+
+    if (flag2 == "Deleted") {
+        toastr.error('Success!... Item Deleted')
+    }
+
+    if (flag3 == "Updated") {
+        toastr.success('Success!... Item Updated')
+    }
+
+</script>
+
+    <div class="card-body">
+        <div class="col-md-4">
+            @Html.Action("CreateScheme")
+        </div>
+        <div class="col-md-8">
+            <div class="table-responsive">
+                <table id="myTable" class="table table-bordered table-striped table-nowrap dataTable" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>
+                                Scheme
+                            </th>
+                            <th>
+                                Code
+                            </th>
+                            <th style="text-align:center">Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ApprovalSchemeID)
+                                </td>
+                                <td style="font-size: small">
+                                    @Html.DisplayFor(modelItem => item.SchemeName)
+                                </td>
+                                <td style="font-size: small">
+                                    @Html.DisplayFor(modelItem => item.Code)
+                                </td>
+                                <td style="text-align:right">
+                                    @Html.ActionLink("Edit", "List", new { id = item.ApprovalSchemeID }, new { @class = "btn btn-xs btn-outline-default" })
+                                    @{
+                                        if (item.Flagged == true)
+                                        {
+                                            <span class="hidden"><a href="#" class="btn btn-xs btn-outline-danger" onclick="DeleteData(@item.ApprovalSchemeID)">Delete </a></span>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" class="btn btn-xs btn-outline-danger" onclick="DeleteData(@item.ApprovalSchemeID)">Delete </a>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
+
+@*hidden field for storing current employeeId*@
+<input type="hidden" id="hiddenId" />
+<script>
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+
+        // ------------------- Delete Item -------------------
+        var DeleteData = function (EmployeeId) {
+            $("#hiddenId").val(EmployeeId);
+            $("#myModal").modal('show');
+        }
+
+        var Delete = function () {
+            var empId = $("#hiddenId").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/SettingApproval/DeleteScheme",
+                data: { Id: empId },
+                success: function (result) {
+                    $("#myModal").modal("hide");
+                    window.location.replace("List", "SettingApproval");
+                }
+            })
+        }
+        //--------------------------------------------------------
+</script>

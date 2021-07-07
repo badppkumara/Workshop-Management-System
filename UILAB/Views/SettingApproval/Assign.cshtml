@@ -1,0 +1,69 @@
+﻿@model IEnumerable<UILAB.Models.ApprovalSettingTB>
+@{
+    ViewBag.Title = "Assign";
+    Layout = null;
+}
+
+<script type="text/javascript">
+
+    var flag = "@TempData["Success"]";
+    var flag2 = "@TempData["Deleted"]";
+    var flag3 = "@TempData["Updated"]";
+
+    if (flag == "Success") {
+        toastr.success('Success!... Item Created')
+    }
+
+    if (flag2 == "Deleted") {
+        toastr.error('Success!... Item Deleted')
+    }
+
+    if (flag3 == "Updated") {
+        toastr.success('Success!... Item Updated')
+    }
+
+</script>
+<div class="card-body">
+
+    <div class="table-responsive">
+        <table id="myTableGroup" class="table table-bordered table-striped table-nowrap dataTable" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>
+                        Approval Items
+                    </th>
+                    <th>
+                        Approval Scheme
+                    </th>
+                    <th>
+                        Code
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ApprovalSettingID)
+                        </td>
+                        <td style="font-size: small">
+                            @Html.DisplayFor(modelItem => item.ApprovalItem)
+                        </td>
+                        <td style="font-size: small">
+                           
+                        </td>
+                        <td style="font-size: small">
+                            @Html.DisplayFor(modelItem => item.Code)
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+    </div>
+
+
+</div>

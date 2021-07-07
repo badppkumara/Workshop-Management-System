@@ -1,0 +1,102 @@
+﻿@model IEnumerable<UILAB.Models.StockPurchaseOrderListTmp>
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "OrderList";
+    Layout = null;
+}
+
+
+<div class="table-responsive">
+    <table id="myTable" class="table table-bordered table-striped table-nowrap dataTable" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>
+                    Item
+                </th>
+                <th>
+                    Qty
+                </th>
+                <th>
+                    Unit Amount
+                </th>
+                <th>
+                    Total Amount
+                </th>
+                @*<th>
+                        Option
+                    </th>*@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @{
+                            using (var db = new DatabaseContext())
+                            {
+                                var product = db.StockTRs.SingleOrDefault(b => b.StockID == item.StockID);
+                                if (product != null)
+                                {
+                                    @Html.DisplayFor(modelItem => product.Product) @Html.DisplayFor(modelItem => product.Product)
+                                }
+                            }
+
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Qty)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UnitAmount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalAmount)
+                    </td>
+                    @*<td>
+                            @if (Convert.ToDateTime(item.StartDate).ToString("yyyy-MM-dd") != "1900-01-01")
+                            {
+                                @Convert.ToDateTime(item.StartDate).ToString("dd-MM-yyyy")
+                            }
+                            else
+                            {
+                                <span style="color:firebrick">@Html.Encode("")</span>
+                            }
+                        </td>*@
+                </tr>
+                            }
+
+        </tbody>
+    </table>
+</div>
+
+@*hidden field for storing current Id*@
+<input type="hidden" id="hiddenId" />
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+
+    // ------------------- Delete Item -------------------
+    var DeleteData = function (ResultId) {
+        $("#hiddenId").val(ResultId);
+        $("#myModal").modal('show');
+    }
+
+    var Delete = function () {
+        var empId = $("#hiddenId").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/Job/DeleteTask",
+            data: { Id: empId },
+            success: function (result) {
+                $("#myModal").modal("hide");
+                //window.location.replace("StartJob", "Job");
+            }
+        })
+    }
+    //--------------------------------------------------------
+</script>
+
+

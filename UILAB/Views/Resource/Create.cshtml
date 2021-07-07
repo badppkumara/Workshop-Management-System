@@ -1,0 +1,217 @@
+﻿@model UILAB.Models.ResourceTR
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["errorMessage"]' != "") {
+            $("#ErrorMsg").show();
+        }
+        else {
+            $("#ErrorMsg").hide();
+        }
+    });
+
+
+</script>
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Admin/Dashboard">Dashboard</a> | <a href="~/Resources/List">Resources</a> | Add Resource
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Resources</span></h5>
+    </div>
+    <div class="row gutter-xs">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    @Html.ActionLink("Back to List", "List", null, new { @class = "btn btn-sm btn-success" })
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("Create", "Resource", FormMethod.Post, new { enctype = "multipart/form-data", @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+
+                        <div class="col-md-7">
+                            <div class="demo-form-wrapper">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                @Html.HiddenFor(model => model.SegmentID)
+                                @Html.HiddenFor(model => model.ResourceID)
+
+                                <h5 style="color:firebrick"><strong>Resource Information</strong></h5>
+                                <hr style="margin-top:5px; margin-bottom:10px;" />
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group form-group-sm">
+                                            <label>Category <span style="color: red">*</span></label>
+                                            <div>
+                                                @Html.DropDownListFor(model => model.TypeID, ViewBag.TypeList as SelectList, "--- Select Category ---", new { @class = "form-control", @onchange = "FillModel()" })
+                                                @Html.ValidationMessageFor(model => model.TypeID, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group form-group-sm">
+                                            <label>Sub Category <span style="color: red">*</span></label>
+                                            <div>
+                                                @Html.DropDownListFor(model => model.SubTypeID, new SelectList(Enumerable.Empty<SelectListItem>(), "SubTypeID", "SubTypeName"), "--- Select Sub Category ---", new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.SubTypeID, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group form-group-sm">
+                                            <label>Brand Name </label>
+                                            <div>
+                                                @Html.DropDownListFor(model => model.BrandID, ViewBag.BrandList as SelectList, "--- Select Brand ---", new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group form-group-sm">
+                                            <label>Serial No. <span style="color: red">*</span></label>
+                                            <div>
+                                                @Html.EditorFor(model => model.SerialNo, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.SerialNo, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group form-group-sm">
+                                            <label>Asset Code </label>
+                                            <div>
+                                                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group form-group-sm">
+                                            <label>Asset Code </label>
+                                            <div>
+                                                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h5 style="color:firebrick"><strong>Purchase Information</strong></h5>
+                                <hr style="margin-top:5px; margin-bottom:10px" />
+
+                                <div class="row">
+
+                                    <div class="col-md-3">
+                                        <div class="form-group form-group-sm">
+                                            <label>Job Start Date <span style="color: red">*</span></label>
+                                            <div class="input-with-icon">
+                                                <input id="startdate" name="startdate" class="form-control" type="text" data-provide="datepicker" data-date-autoclose="true" data-date-format="dd-mm-yyyy"
+                                                       data-date-today-highlight="true" autocomplete="off">
+                                                <span class="icon icon-calendar input-icon"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group form-group-sm">
+                                            <label>Invoice Date </label>
+                                            <div class="input-with-icon">
+                                                <input id="invdate" name="invdate" class="form-control" type="text" data-provide="datepicker" data-date-autoclose="true" data-date-format="dd-mm-yyyy"
+                                                       data-date-today-highlight="true" autocomplete="off">
+                                                <span class="icon icon-calendar input-icon"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="submit" value="Create Invoice" class="btn btn-primary" id="btnSave" name="SaveEntry" />
+                                    @*<button class="btn btn-primary btn-block btn-next" type="button">Continue</button>*@
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-5">
+                        </div>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function FillModel() {
+        var brandId = $('#TypeID').val();
+        $.ajax({
+            url: '/Resource/FillModel',
+            type: "GET",
+            dataType: "JSON",
+            data: { Brand: brandId },
+            success: function (vehmodels) {
+                $("#SubTypeID").html(""); // clear before appending new list
+                $.each(vehmodels, function (i, city) {
+                    $("#SubTypeID").append(
+                        $('<option></option>').val(city.SubTypeID).html(city.SubTypeName));
+                });
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $('#CreateFormID').validate({
+            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+            errorElement: 'div',
+            errorPlacement: function (error, e) {
+                e.parents('.form-group > div').append(error);
+            },
+            highlight: function (e) {
+
+                $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                $(e).closest('.help-block').remove();
+            },
+            success: function (e) {
+                e.closest('.form-group').removeClass('has-success has-error');
+                e.closest('.help-block').remove();
+            },
+            rules: {
+                'TypeName': {
+                    required: true,
+                }
+            },
+            messages: {
+                'TypeName': 'This Field Required'
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $('#qty').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99
+        });
+        $('#unitprice').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99,
+        });
+        $('#alertqty').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99,
+        });
+    });
+
+</script>

@@ -1,0 +1,133 @@
+﻿@model IEnumerable<UILAB.Models.vw_JobTR>
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "DetailJobList";
+    Layout = null;
+}
+
+<div class="table-responsive">
+    <table id="myTable" class="table table-bordered table-striped table-nowrap dataTable" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th style="text-align:center">
+                    Job ID
+                </th>
+                <th style="text-align:center">
+                    Job Start Date
+                </th>
+                <th style="text-align:center">
+                    Job Finish Date
+                </th>
+                <th style="text-align:center">
+                    Job Status
+                </th>
+                <th style="text-align:center">
+                    Invoice No
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="font-size: small; text-align:center">
+                        @Html.DisplayFor(modelItem => item.JobTRID)
+                    </td>
+
+                    <td style="font-size: small; text-align:center">
+                        @if (Convert.ToDateTime(item.JobStartDate).ToString("yyyy-MM-dd") != "1900-01-01")
+                        {
+                            @Convert.ToDateTime(item.JobStartDate).ToString("dd-MM-yyyy")
+                        }
+                        else
+                        {
+                            <span style="color:firebrick">@Html.Encode("")</span>
+                        }
+                    </td>
+                    <td style="font-size: small; text-align:center">
+                        @if (Convert.ToDateTime(item.JobFinishDate).ToString("yyyy-MM-dd") != "1900-01-01")
+                        {
+                            @Convert.ToDateTime(item.JobFinishDate).ToString("dd-MM-yyyy")
+
+                        }
+                        else
+                        {
+                            <span style="color:firebrick">@Html.Encode("")</span>
+                        }
+                    </td>
+                    @{
+                        using (var db = new DatabaseContext())
+                        {
+                            var task = (from data in db.vw_JobTasksTRs where data.JobID == item.JobID select data).ToList();
+                            var employee = (from data in db.JobAssignEmpTRs where data.JobID == item.JobID select data).ToList();
+
+                            <td style="font-size: small; text-align:center">
+                                @{
+                                    if (item.StatusName == "Completed")
+                                    {
+                                        <span class="label label-outline-success">@Html.Encode("Completed")</span>
+                                    }
+                                    else
+                                    {
+                                        if (task.Count > 0)
+                                        {
+                                            if (employee.Count == 0)
+                                            {
+                                                <span class="label label-outline-danger">@Html.Encode("Assign Employee")</span>
+                                            }
+                                            else
+                                            {
+                                                if (item.StatusName == "Pending")
+                                                {
+                                                    <span class="label label-outline-warning">@Html.Encode("Pending")</span>
+                                                }
+                                                if (item.StatusName == "Started")
+                                                {
+                                                    <span class="label label-outline-info">@Html.Encode("Started")</span>
+                                                }
+                                                if (item.StatusName == "On Hold")
+                                                {
+                                                    <span class="label label-outline-warning">@Html.Encode("On Hold")</span>
+                                                }
+                                                if (item.StatusName == "Completed")
+                                                {
+                                                    <span class="label label-outline-success">@Html.Encode("Completed")</span>
+                                                }
+                                                if (item.StatusName == "Canceled")
+                                                {
+                                                    <span class="label label-outline-danger">@Html.Encode("Canceled")</span>
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (item.StatusName == "Canceled")
+                                            {
+                                                <span class="label label-outline-danger">@Html.Encode("Canceled")</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-outline-danger">@Html.Encode("Tasks Empty")</span>
+                                            }
+                                        }
+                                    }
+                                }
+                            </td>
+                            <td style="font-size: small; text-align:center">
+                                @Html.DisplayFor(modelItem => item.InvoiceNo)
+                            </td>
+                                    }
+                    }
+                </tr>
+                                    }
+
+        </tbody>
+    </table>
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({ order: [[0, "desc"]] });
+    });
+
+</script>

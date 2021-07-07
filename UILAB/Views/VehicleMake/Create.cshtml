@@ -1,0 +1,129 @@
+﻿@model UILAB.Models.VehicleMakeTB
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["errorMessage"]' != "") {
+            $("#ErrorMsg").show();
+        }
+        else {
+            $("#ErrorMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["successMsg"]' != "") {
+            $("#SuccessMsg").show();
+            $('#SuccessMsg').delay(4000).hide(0);
+        }
+        else {
+            $("#SuccessMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["buttonMsg"]' != "") {
+            $("#ButtonMsg").show();
+        }
+        else {
+            $("#ButtonMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["viewImg"]' != "") {
+            $("#ViewImg").show();
+        }
+        else {
+            $("#ViewImg").hide();
+        }
+    });
+</script>
+
+@using (Html.BeginForm("Create", "VehicleMake", FormMethod.Post, new { enctype = "multipart/form-data", @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.MakeID)
+
+    <div class="demo-form-wrapper">
+        <h4>@ViewBag.SubmitHeader Vehicle Make</h4>
+        <hr style="margin-top:5px" />
+
+        <div class="form-group form-group-sm">
+            <label>Make <span style="color: red">*</span></label>
+            <div>
+                @Html.EditorFor(model => model.Make, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Make, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            <label>Make Image </label>
+            <div>
+                <input type="file" accept="image/*" name="File1" id="File1" class="form-control">
+                <p class="help-block">
+                    <small>
+                        Allowed File: .jpeg, .jpg, .png,
+                    </small>
+                </p>
+
+            </div>
+        </div>
+
+        <div class="form-group" hidden="hidden" id="ViewImg">
+            <img height="80" src="@ViewBag.Path" />
+        </div>
+
+
+        <div class="form-group" id="ErrorMsg" hidden="hidden">
+            <div class="alert alert-danger">
+                <span class="sidenav-icon icon icon-question-circle"></span> Vehicle Make <strong>"@TempData["errorMessage"]"</strong> Exists...!
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            <input type="submit" class="btn btn-primary" id="btnSave" name="SaveEntry" value="@ViewBag.SubmitValue" />
+            <a href="~/VehicleMake/List" class="btn btn-warning" id="ButtonMsg">Clear </a>
+        </div>
+
+        <div class="form-group" id="SuccessMsg" hidden="hidden">
+            <div class="alert alert-success">
+                <span class="sidenav-icon icon icon-thumbs-up"></span> Vehicle Make @TempData["successMsg"]
+            </div>
+        </div>
+    </div>
+                    }
+
+<script>
+    $(document).ready(function () {
+        $('#CreateFormID').validate({
+            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+            errorElement: 'div',
+            errorPlacement: function (error, e) {
+                e.parents('.form-group > div').append(error);
+            },
+            highlight: function (e) {
+
+                $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                $(e).closest('.help-block').remove();
+            },
+            success: function (e) {
+                e.closest('.form-group').removeClass('has-success has-error');
+                e.closest('.help-block').remove();
+            },
+            rules: {
+                'Make': {
+                    required: true,
+                }
+            },
+            messages: {
+                'Make': 'This Field Required'
+            }
+        });
+    });
+</script>

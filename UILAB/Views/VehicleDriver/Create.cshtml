@@ -1,0 +1,298 @@
+﻿@model UILAB.Models.VehicleDriverTR
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["errorMessage"]' != "") {
+            $("#ErrorMsg").show();
+        }
+        else {
+            $("#ErrorMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["successMsg"]' != "") {
+            $("#SuccessMsg").show();
+            $('#SuccessMsg').delay(4000).hide(0);
+        }
+        else {
+            $("#SuccessMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["buttonMsg"]' != "") {
+            $("#ButtonMsg").show();
+        }
+        else {
+            $("#ButtonMsg").hide();
+        }
+    });
+
+    $(document).on('change', '#newdriver', function () {
+        if ($(this).prop('checked')) {
+            $('#selectemployee').attr('disabled', 'disabled');
+            //$('#taskremark').attr('disabled', 'disabled');
+            //$('#tasknote').removeAttr('disabled');
+
+        } else {
+            $('#selectemployee').removeAttr('disabled');
+            //$('#taskremark').removeAttr('disabled');
+            //$('#tasknote').attr('disabled', 'disabled');
+        }
+    });
+
+</script>
+
+@using (Html.BeginForm("Create", "VehicleDriver", FormMethod.Post, new { enctype = "multipart/form-data", @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.DriverID)
+    <div class="demo-form-wrapper">
+        <h4>@ViewBag.SubmitHeader</h4>
+        <hr style="margin-top:5px" />
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group form-group-sm">
+                    <label>Employee </label>
+                    <div>
+                        @Html.DropDownListFor(model => model.EmployeeNo, ViewBag.EmpList as SelectList, "Select Employee", new { @class = "form-control", @onchange = "FillModel()", @id = "selectemployee" })
+                        @Html.ValidationMessageFor(model => model.EmployeeNo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group form-group-sm">
+                    <label>Driving Licence </label>
+                    <div>
+                        @Html.EditorFor(model => model.DrivingLicenceNo, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                        @Html.ValidationMessageFor(model => model.DrivingLicenceNo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            <label></label>
+            <label class="custom-control custom-control-primary custom-checkbox">
+                <input class="custom-control-input" type="checkbox" name="newdriver" id="newdriver" value="True">
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-label">Create New Driver</span>
+            </label>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group form-group-sm">
+                    <label>First Name </label>
+                    <div>
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { placeholder = "First Name", @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group form-group-sm">
+                    <label>Middle Name </label>
+                    <div>
+                        @Html.EditorFor(model => model.MiddleName, new { htmlAttributes = new { placeholder = "Middle Name", @class = "form-control" } })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group form-group-sm">
+                    <label>Last Name </label>
+                    <div>
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { placeholder = "Last Name", @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group form-group-sm">
+                    <label>Gender </label>
+                    <div>
+                        @Html.DropDownListFor(model => model.GenderID, ViewBag.GenderList as SelectList, "--- Select Gender ---", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.GenderID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group form-group-sm">
+                    <label>Date of Birth </label>
+                    <div class="input-with-icon">
+                        <input id="dateofbirth" name="dateofbirth" class="form-control" type="text" data-date-autoclose="true" data-date-format="dd-MM-yyyy"
+                               data-provide="datepicker" autocomplete="off">
+                        <span class="icon icon-calendar input-icon"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h5>Contact Information</h5>
+        <hr style="margin-top:5px" />
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group form-group-sm">
+                    <label>Unit No. </label>
+                    <div>
+                        @Html.EditorFor(model => model.Address1, new { htmlAttributes = new { placeholder = "No.", @class = "form-control" } })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group form-group-sm">
+                    <label>Street </label>
+                    <div>
+                        @Html.EditorFor(model => model.Address2, new { htmlAttributes = new { placeholder = "Street", @class = "form-control" } })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group form-group-sm">
+                    <label>City </label>
+                    <div>
+                        @Html.EditorFor(model => model.Address3, new { htmlAttributes = new { placeholder = "City", @class = "form-control" } })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group form-group-sm">
+                    <label>Postal No. </label>
+                    <div>
+                        @Html.EditorFor(model => model.PostalNo, new { htmlAttributes = new { placeholder = "Postal No", @class = "form-control" } })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group form-group-sm">
+                    <label>Country </label>
+                    <div>
+                        @Html.DropDownListFor(model => model.CountryID, ViewBag.CountryList as SelectList, "--- Select Country ---", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group form-group-sm">
+                    <label>Email </label>
+                    <div>
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group form-group-sm">
+                    <label>Mobile </label>
+                    <div>
+                        @Html.EditorFor(model => model.Mobile, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Mobile, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group form-group-sm">
+                    <label>User Name </label>
+                    <div>
+                        @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group form-group-sm">
+                    <label>Password </label>
+                    <div>
+                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            <div>
+                <label class="custom-control custom-control-primary custom-checkbox">
+                    <input class="custom-control-input" type="checkbox" name="iscontract" id="iscontract" value="True">
+                    <span class="custom-control-indicator"></span>
+                    <span class="custom-control-label">Is Contract</span>
+                </label>
+                <label class="custom-control custom-control-primary custom-checkbox">
+                    <input class="custom-control-input" type="checkbox" name="isactive" id="isactive" checked="checked" value="True">
+                    <span class="custom-control-indicator"></span>
+                    <span class="custom-control-label">Is Active</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group" id="ErrorMsg" hidden="hidden">
+            <div class="alert alert-danger">
+                <span class="sidenav-icon icon icon-question-circle"></span> Driver <strong>"@TempData["errorMessage"]"</strong> Exists...!
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            <input type="submit" class="btn btn-primary" id="btnSave" name="SaveEntry" value="@ViewBag.SubmitValue" />
+            <a href="~/VehicleDriver/List" class="btn btn-warning" id="ButtonMsg">Clear </a>
+        </div>
+
+        <div class="form-group" id="SuccessMsg" hidden="hidden">
+            <div class="alert alert-success">
+                <span class="sidenav-icon icon icon-thumbs-up"></span> @TempData["successMsg"]
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#CreateFormID').validate({
+            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+            errorElement: 'div',
+            errorPlacement: function (error, e) {
+                e.parents('.form-group > div').append(error);
+            },
+            highlight: function (e) {
+
+                $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                $(e).closest('.help-block').remove();
+            },
+            success: function (e) {
+                e.closest('.form-group').removeClass('has-success has-error');
+                e.closest('.help-block').remove();
+            },
+            rules: {
+                'EmployeeNo': {
+                    required: true,
+                }
+            },
+            messages: {
+                'EmployeeNo': 'This Field Required'
+            }
+        });
+    });
+</script>

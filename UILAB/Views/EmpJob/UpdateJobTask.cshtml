@@ -1,0 +1,211 @@
+﻿@model UILAB.Models.JobTaskTR
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "UpdateJobTask";
+    Layout = null;
+}
+
+<script type="text/javascript">
+    var flag = "@TempData["Completed"]";
+    if (flag == 1) {
+        $("#btncomplete").hide();
+    }
+    else {
+        $("#btncomplete").show();
+    }
+
+    $(document).on('change', '#checkall', function () {
+        if ($(this).prop('checked')) {
+            $('#tasklist').attr('disabled', 'disabled');
+        } else {
+            $('#tasklist').removeAttr('disabled');
+        }
+    });
+
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["ErrorMessage"]' != "") {
+            $("#errorMsg").show();
+        }
+        else {
+            $("#errorMsg").hide();
+        }
+    });
+</script>
+<div class="card">
+    <div class="card-body">
+
+        <div class="col-md-3">
+            @using (Html.BeginForm("AddJobTask", "EmpJob", FormMethod.Post, new { @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+                <div class="demo-form-wrapper">
+                    <div class="form form-horizontal" id="demo-inputmask">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(model => model.JobID)
+                        <div class="form form-horizontal" id="demo-inputmask">
+
+                            <div class="form-group">
+                                <label>Job Task <span style="color: red">*</span></label>
+                                @Html.DropDownListFor(model => model.JobTaskTRID, ViewBag.Tasklist as SelectList, "--- Select Task ---", new { @class = "form-control", @id = "tasklist" })
+                                @Html.ValidationMessageFor(model => model.JobTaskTRID, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                <label></label>
+                                <label class="custom-control custom-control-primary custom-checkbox">
+                                    <input class="custom-control-input" type="checkbox" name="checkall" id="checkall" value="True">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-label">Select All Tasks</span>
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Employee <span style="color: red">*</span></label>
+                                @Html.DropDownListFor(model => model.CompletedBy, ViewBag.employeelist as SelectList, "--- Select Employee ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.CompletedBy, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                <label>Job Status <span style="color: red">*</span></label>
+                                @Html.DropDownListFor(model => model.StatusID, ViewBag.statuslist as SelectList, "--- Select Status ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.StatusID, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group" style="z-index: 99999 !important">
+                                <label>Job Start Date <span style="color: red">*</span></label>
+                                <div class="input-with-icon">
+                                    <input id="startdate" name="startdate" class="form-control" type="text" data-date-autoclose="true" data-date-format="dd-MM-yyyy"
+                                           data-provide="datepicker" data-date-today-highlight="true" value="@TempData["startdate"]" autocomplete="off">
+                                    <span class="icon icon-calendar input-icon"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="z-index: 99999 !important">
+                                <label>Job Finish Date <span style="color: red">*</span></label>
+                                <div class="input-with-icon">
+                                    <input id="finishdate" name="finishdate" class="form-control" type="text" data-date-autoclose="true" data-date-format="dd-MM-yyyy"
+                                           data-provide="datepicker" data-date-today-highlight="true" value="@TempData["finishdate"]" autocomplete="off">
+                                    <span class="icon icon-calendar input-icon"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Description </label>
+                                @Html.TextAreaFor(model => model.Remarks, 5, 40, new { @class = "form-control" })
+                            </div>
+
+                            <div class="form-group">
+                                <input type="submit" value="Update Task" class="btn btn-primary" id="btnAdd" name="btnAdd" />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-9">
+            @Html.Action("OrderList")
+            <hr />
+
+            @*<div class="col-md-12">
+                @{
+                    using (var db = new DatabaseContext())
+                    {
+                        var task = (from data in db.JobTaskTRs where data.JobID == Model.JobID select data).ToList();
+                        var completed = (from data in db.vw_JobTasksTRs where data.JobID == Model.JobID && data.StatusName == "Completed" select data).ToList();
+                        int taskcount = task.Count;
+                        int completedcount = completed.Count;
+
+                        if (taskcount == completedcount)
+                        {
+                            @Html.ActionLink("Complete Job", "CompleteJob", null, new { @class = "btn btn-sm btn-success" })
+                        }
+                        else
+                        {
+                            <span class="hidden"></span>
+                        }
+                    }
+                }
+
+            </div>*@
+            <div class="col-md-12">
+                <div class="form-group" id="errorMsg">
+
+                    <div class="alert alert-danger">
+                        <span class="sidenav-icon icon icon-question-circle"></span> <strong>"@TempData["ErrorMessage"]"</strong>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+    <script>
+        $(document).ready(function () {
+            $('#DataTable').DataTable();
+        });
+
+    </script>
+    <script>
+
+        $(document).ready(function () {
+            $('#CreateFormID').validate({
+                errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+                errorElement: 'div',
+                errorPlacement: function (error, e) {
+                    e.parents('.form-group > div').append(error);
+                },
+                highlight: function (e) {
+
+                    $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                    $(e).closest('.help-block').remove();
+                },
+                success: function (e) {
+                    e.closest('.form-group').removeClass('has-success has-error');
+                    e.closest('.help-block').remove();
+                },
+                rules: {
+                    'CompletedBy': {
+                        required: true,
+                    },
+                    'startdate': {
+                        required: true,
+                    },
+                    'finishdate': {
+                        required: true,
+                    },
+                    'StatusID': {
+                        required: true,
+                    }
+                },
+                messages: {
+                    'CompletedBy': 'This Field Required'
+                },
+                messages: {
+                    'startdate': 'This Field Required'
+                },
+                messages: {
+                    'finishdate': 'This Field Required'
+                },
+                messages: {
+                    'StatusID': 'This Field Required'
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('#qty').inputmask({
+                alias: 'numeric',
+                allowMinus: true,
+                digits: 2,
+                max: 999999.99
+            });
+        });
+
+    </script>
+

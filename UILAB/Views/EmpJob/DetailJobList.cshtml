@@ -1,0 +1,76 @@
+﻿@model IEnumerable<UILAB.Models.vw_JobTasksTR>
+@{
+    ViewBag.Title = "DetailJobList";
+    Layout = null;
+}
+
+<table id="" class="table table-bordered table-nowrap dataTable" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th style="text-align:center">
+                Task Type
+            </th>
+            <th style="text-align:center">
+                Task
+            </th>
+            <th style="text-align:center">
+                Start Date
+            </th>           
+            <th style="text-align:center">
+                Finish Date
+            </th>
+            <th style="text-align:center">
+                Status
+            </th>
+            <th style="text-align:center">
+                Completed By
+            </th>
+            <th style="text-align:center">
+                Remark
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TaskType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TaskName)
+                </td>
+                <td style="text-align:center">
+                    @if (item.StartDate.ToString() != "1900-01-01")
+                    {
+                        @Convert.ToDateTime(item.StartDate).ToString("dd-MM-yyyy")
+                    }
+                    else
+                    {
+                        <span style="color:firebrick">@Html.Encode("Not Assigned")</span>
+                    }
+                </td>
+                <td style="text-align:center">
+                    @if (item.StartDate.ToString() != "1900-01-01")
+                    {
+                        @Convert.ToDateTime(item.FinishDate).ToString("dd-MM-yyyy")
+                    }
+                    else
+                    {
+                        <span style="color:firebrick">@Html.Encode("Not Assigned")</span>
+                    }
+                </td>
+                <td style="text-align:center">
+                    @Html.DisplayFor(modelItem => item.StatusName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Remarks)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

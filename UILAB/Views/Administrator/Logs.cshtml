@@ -1,0 +1,66 @@
+﻿@model IEnumerable<UILAB.Models.SecurityActiveUsers>
+@{
+    ViewBag.Title = "Logs";
+    Layout = null;
+}
+<div class="row gutter-xs">
+
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">User Loging History</span></h5>
+        <div class="table-responsive">
+
+            <table id="myTable" class="table table-bordered table-striped table-nowrap dataTable" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>
+                            Log In Date & Time
+                        </th>
+                        <th>
+                            Log Out Date & Time
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+            {
+                    <tr>
+                        <td>
+                            @if (Convert.ToDateTime(item.LoginDate).ToString("yyyy-MM-dd") != "1900-01-01")
+                            {
+                                @Convert.ToDateTime(item.LoginDate).ToString("dd-MM-yyyy (HH:mm:ss)")
+                            }
+                            else
+                            {
+                                <span style="color:firebrick">@Html.Encode("")</span>
+                            }
+                        </td>
+                        <td>
+                            @if (Convert.ToDateTime(item.LogOutDate).ToString("yyyy-MM-dd") != "1900-01-01")
+                            {
+                                @Convert.ToDateTime(item.LogOutDate).ToString("dd-MM-yyyy (HH:mm:ss)")
+                            }
+                            else
+                            {
+                                <span style="color:firebrick">@Html.Encode("")</span>
+                            }
+                            @*@Html.DisplayFor(modelItem => item.LogOutDate)*@
+                        </td>
+                        @*<td style="text-align:right">
+                                @Html.ActionLink("View", "Detail", new { id = item.UserID }, new { @class = "btn btn-xs btn-outline-primary" })
+                                @Html.ActionLink("Edit", "Edit", new { id = item.UserID }, new { @class = "btn btn-xs btn-outline-default" })
+                                @Html.ActionLink("Delete", "Delete", new { id = item.UserID }, new { @class = "btn btn-xs btn-outline-danger" })
+                            </td>*@
+                    </tr>
+                }
+
+                </tbody>
+            </table>
+        </div>
+    
+</div>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+
+    </script>
+

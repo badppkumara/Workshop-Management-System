@@ -1,0 +1,627 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - ERP Application</title>
+    <meta content="Admin Dashboard" name="description" />
+    <meta content="System Solutions" name="author" />
+    <link rel="apple-touch-icon" sizes="180x180" href="~/Content/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="~/Content/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="~/Content/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="~/Content/manifest.json">
+    <link rel="mask-icon" href="~/Content/safari-pinned-tab.svg" color="#d9230f">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400italic,500,700">
+    <link rel="stylesheet" href="~/Content/css/vendor.min.css">
+    <link rel="stylesheet" href="~/Content/css/elephant.min.css">
+    <link rel="stylesheet" href="~/Content/css/application.min.css">
+    <link rel="stylesheet" href="~/Content/css/demo.min.css">
+
+    <link href="~/Content/css/toastr.css" rel="stylesheet" />
+    <!-- DataTables CSS -->
+    <link href="~/Content/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <!-- jQuery -->
+    <script src="~/Content/js/jquery.min.js"></script>
+    <!-- DataTables -->
+    @*<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.js">
+        </script>*@
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="~/Scripts/toastr.min.js"></script>
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/css/css")
+    <script>
+        $(document).ready(function () {
+            function DisableBackButton() {
+                window.history.forward()
+            }
+            DisableBackButton();
+            window.onload = DisableBackButton;
+            window.onpageshow = function (evt) { if (evt.persisted) DisableBackButton() }
+            window.onunload = function () { void (0) }
+        });
+    </script>
+
+</head>
+<body class="layout layout-header-fixed layout-sidebar-fixed">
+    <div class="layout-header">
+        <div class="navbar navbar-default">
+            <div class="navbar-header">
+                <a class="navbar-brand navbar-brand-center" href="~/Admin/Dashboard">
+                    @Session["SegmentName"]
+                </a>
+                <button class="navbar-toggler visible-xs-block collapsed" type="button" data-toggle="collapse" data-target="#sidenav">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="bars">
+                        <span class="bar-line bar-line-1 out"></span>
+                        <span class="bar-line bar-line-2 out"></span>
+                        <span class="bar-line bar-line-3 out"></span>
+                    </span>
+                    <span class="bars bars-x">
+                        <span class="bar-line bar-line-4"></span>
+                        <span class="bar-line bar-line-5"></span>
+                    </span>
+                </button>
+                <button class="navbar-toggler visible-xs-block collapsed" type="button" data-toggle="collapse" data-target="#navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="arrow-up"></span>
+                    <span class="ellipsis ellipsis-vertical">
+                        <img class="ellipsis-object" width="32" height="32" src="@Session["ImageAdmin"]">
+                    </span>
+                </button>
+            </div>
+            <div class="navbar-toggleable">
+                <nav id="navbar" class="navbar-collapse collapse">
+                    <button class="sidenav-toggler hidden-xs" title="Collapse sidenav ( [ )" aria-expanded="true" type="button">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bars">
+                            <span class="bar-line bar-line-1 out"></span>
+                            <span class="bar-line bar-line-2 out"></span>
+                            <span class="bar-line bar-line-3 out"></span>
+                            <span class="bar-line bar-line-4 in"></span>
+                            <span class="bar-line bar-line-5 in"></span>
+                            <span class="bar-line bar-line-6 in"></span>
+                        </span>
+                    </button>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="visible-xs-block">
+                            <h4 class="navbar-text text-center">Hi, @Session["UserName"]</h4>
+                        </li>
+                        <li class="hidden-xs hidden-sm">
+                            @*<form class="navbar-search navbar-search-collapsed">
+                                    <div class="navbar-search-group">
+                                        <input class="navbar-search-input" type="text" placeholder="Search for people, companies, and more&hellip;">
+                                        <button class="navbar-search-toggler" title="Expand search form ( S )" aria-expanded="false" type="submit">
+                                            <span class="icon icon-search icon-lg"></span>
+                                        </button>
+                                        <button class="navbar-search-adv-btn" type="button">Advanced</button>
+                                    </div>
+                                </form>*@
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true">
+                                <span class="icon-with-child hidden-xs">
+                                    <span class="icon icon-plus-square icon-lg"></span> <span style="font-size:13px">Add New</span>
+                                </span>
+                                <span class="visible-xs-block">
+                                    <span class="icon icon-plus-square icon-lg icon-fw"></span>
+                                    Add New
+                                </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
+                                @*<div class="dropdown-header">
+                                        <a class="dropdown-link" href="compose.html">New Message</a>
+                                        <h5 class="dropdown-heading">Recent messages</h5>
+                                    </div>*@
+                                <div class="dropdown-body">
+                                    <div class="list-group list-group-divided custom-scrollbar">
+                                        <a class="list-group-item" href="~/SaleInvoiceJob/Create">
+                                            <div class="notification">
+                                                <div class="notification-media">
+                                                    <span class="icon icon-dollar icon-lg"></span>
+                                                </div>
+                                                <div class="notification-content">
+                                                    <h5 class="notification-heading">Create Invoice</h5>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        @*<a class="list-group-item" href="~/Vehicles/Create">
+                                            <div class="notification">
+                                                <div class="notification-media">
+                                                    <span class="icon icon-truck icon-lg"></span>
+                                                </div>
+                                                <div class="notification-content">
+                                                    <h5 class="notification-heading">Add Vehicle</h5>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <a class="list-group-item" href="~/Job/Create">
+                                            <div class="notification">
+                                                <div class="notification-media">
+                                                    <span class="icon icon-edit icon-lg"></span>
+                                                </div>
+                                                <div class="notification-content">
+                                                    <h5 class="notification-heading">Add a Job</h5>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <a class="list-group-item" href="~/Customer/Create">
+                                            <div class="notification">
+                                                <div class="notification-media">
+                                                    <span class="icon icon-user icon-lg"></span>
+                                                </div>
+                                                <div class="notification-content">
+                                                    <h5 class="notification-heading">Add Customer</h5>
+                                                </div>
+                                            </div>
+                                        </a>*@
+                                    </div>
+                                </div>
+                                @*<div class="dropdown-footer">
+                                        <a class="dropdown-btn" href="#">See All</a>
+                                    </div>*@
+                            </div>
+                        </li>
+                        @*<li class="dropdown">
+                                <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true">
+                                    <span class="icon-with-child hidden-xs">
+                                        <span class="icon icon-bell-o icon-lg"></span>
+                                        <span class="badge badge-danger badge-above right">7</span>
+                                    </span>
+                                    <span class="visible-xs-block">
+                                        <span class="icon icon-bell icon-lg icon-fw"></span>
+                                        <span class="badge badge-danger pull-right">7</span>
+                                        Notifications
+                                    </span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
+                                    <div class="dropdown-header">
+                                        <a class="dropdown-link" href="#">Mark all as read</a>
+                                        <h5 class="dropdown-heading">Recent Notifications</h5>
+                                    </div>
+                                    <div class="dropdown-body">
+                                        <div class="list-group list-group-divided custom-scrollbar">
+                                            <a class="list-group-item" href="#">
+                                                <div class="notification">
+                                                    <div class="notification-media">
+                                                        <span class="icon icon-exclamation-triangle bg-warning rounded sq-40"></span>
+                                                    </div>
+                                                    <div class="notification-content">
+                                                        <small class="notification-timestamp">35 min</small>
+                                                        <h5 class="notification-heading">Update Status</h5>
+                                                        <p class="notification-text">
+                                                            <small class="truncate">Failed to get available update data. To ensure the proper functioning of your application, update now.</small>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a class="list-group-item" href="#">
+                                                <div class="notification">
+                                                    <div class="notification-media">
+                                                        <span class="icon icon-flag bg-success rounded sq-40"></span>
+                                                    </div>
+                                                    <div class="notification-content">
+                                                        <small class="notification-timestamp">43 min</small>
+                                                        <h5 class="notification-heading">Account Contact Change</h5>
+                                                        <p class="notification-text">
+                                                            <small class="truncate">A contact detail associated with your account teddy.wilson, has recently changed.</small>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a class="list-group-item" href="#">
+                                                <div class="notification">
+                                                    <div class="notification-media">
+                                                        <span class="icon icon-exclamation-triangle bg-warning rounded sq-40"></span>
+                                                    </div>
+                                                    <div class="notification-content">
+                                                        <small class="notification-timestamp">1 hr</small>
+                                                        <h5 class="notification-heading">Failed Login Warning</h5>
+                                                        <p class="notification-text">
+                                                            <small class="truncate">There was a failed login attempt from "192.98.19.164" into the account teddy.wilson.</small>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a class="list-group-item" href="#">
+                                                <div class="notification">
+                                                    <div class="notification-media">
+                                                        <img class="rounded" width="40" height="40" src="img/0310728269.jpg" alt="Daniel Taylor">
+                                                    </div>
+                                                    <div class="notification-content">
+                                                        <small class="notification-timestamp">4 hr</small>
+                                                        <h5 class="notification-heading">Daniel Taylor</h5>
+                                                        <p class="notification-text">
+                                                            <small class="truncate">Like your post: "Everything you know about Bootstrap is wrong".</small>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a class="list-group-item" href="#">
+                                                <div class="notification">
+                                                    <div class="notification-media">
+                                                        <img class="rounded" width="40" height="40" src="img/0872116906.jpg" alt="Emma Lewis">
+                                                    </div>
+                                                    <div class="notification-content">
+                                                        <small class="notification-timestamp">8 hr</small>
+                                                        <h5 class="notification-heading">Emma Lewis</h5>
+                                                        <p class="notification-text">
+                                                            <small class="truncate">Like your post: "Everything you know about Bootstrap is wrong".</small>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a class="list-group-item" href="#">
+                                                <div class="notification">
+                                                    <div class="notification-media">
+                                                        <img class="rounded" width="40" height="40" src="img/0601274412.jpg" alt="Sophia Evans">
+                                                    </div>
+                                                    <div class="notification-content">
+                                                        <small class="notification-timestamp">8 hr</small>
+                                                        <h5 class="notification-heading">Sophia Evans</h5>
+                                                        <p class="notification-text">
+                                                            <small class="truncate">Like your post: "Everything you know about Bootstrap is wrong".</small>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a class="list-group-item" href="#">
+                                                <div class="notification">
+                                                    <div class="notification-media">
+                                                        <img class="rounded" width="40" height="40" src="img/0180441436.jpg" alt="Teddy Wilson">
+                                                    </div>
+                                                    <div class="notification-content">
+                                                        <small class="notification-timestamp">9 hr</small>
+                                                        <h5 class="notification-heading">Teddy Wilson</h5>
+                                                        <p class="notification-text">
+                                                            <small class="truncate">Published a new post: "Everything you know about Bootstrap is wrong".</small>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-footer">
+                                        <a class="dropdown-btn" href="#">See All</a>
+                                    </div>
+                                </div>
+                            </li>*@
+                        <li class="dropdown hidden-xs">
+                            <button class="navbar-account-btn" data-toggle="dropdown" aria-haspopup="true">
+                                <img class="rounded" width="36" height="36" src="@Session["ImageAdmin"]"> @Session["UserName"]
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li class="navbar-upgrade-version">Version: @Session["BuildVersion"]</li>
+                                <li class="divider"></li>
+                                <li>@*<a href="~/ProfileAdmin/View">Profile</a>*@</li>
+                                <li><a href="~/Login/Logout">Sign out</a></li>
+                            </ul>
+                        </li>
+                        @*<li class="visible-xs-block">
+                                <a href="/ProfileAdmin/View">
+                                    <span class="icon icon-user icon-lg icon-fw"></span>
+                                    Profile
+                                </a>
+                            </li>*@
+                        <li class="visible-xs-block">
+                            <a href="~/Login/Logout">
+                                <span class="icon icon-power-off icon-lg icon-fw"></span>
+                                Sign out
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="layout-main">
+        <div class="layout-sidebar">
+            <div class="layout-sidebar-backdrop"></div>
+            <div class="layout-sidebar-body">
+                <div class="custom-scrollbar">
+                    <nav id="sidenav" class="sidenav-collapse collapse">
+                        <ul class="sidenav">
+                            <li class="sidenav-heading">Main</li>
+                            <li class="sidenav-item @(ViewBag.Current == "Dashboard" ? "active" : "")">
+                                <a href="~/Admin/Dashboard">
+                                    <span class="sidenav-icon icon icon-home"></span>
+                                    <span class="sidenav-label">Dashboard</span>
+                                </a>
+                            </li>
+
+                            <li class="sidenav-item has-subnav @(ViewBag.Current == "Setting" ? "active open" : "")">
+                                <a href="#" aria-haspopup="true">
+                                    <span class="sidenav-icon icon icon-gears"></span>
+                                    <span class="sidenav-label">Settings</span>
+                                </a>
+                                <ul class="sidenav-subnav collapse">
+                                    <li class="sidenav-subheading">Settings</li>
+                                    <li class="@(ViewBag.CurrentSub == "Approval" ? "active" : "")"><a href="~/SettingApproval/List">Approval Settings</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "Segment" ? "active" : "")"><a href="~/SettingBusiness/List">General Preference</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "SegmentType" ? "active" : "")">@Html.ActionLink("Segment Types", "List", "SegmentType")</li>
+                                    <li class="@(ViewBag.CurrentSub == "VMSSetting" ? "active" : "")"><a href="~/SettingVMS/List">VMS Settings</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "Inter" ? "active" : "")">@Html.ActionLink("Intergrations", "List", "SettingAPI")</li>
+                                    <li class="@(ViewBag.CurrentSub == "Billing" ? "active" : "")">@Html.ActionLink("Billing Settings", "List", "Intergration")</li>
+                                    <li class="@(ViewBag.CurrentSub == "CRMHRM" ? "active" : "")">@Html.ActionLink("CRM & HRM Settings", "List", "Intergration")</li>
+                                    <li class="@(ViewBag.CurrentSub == "Communication" ? "active" : "")">@Html.ActionLink("Communication Settings", "List", "Intergration")</li>
+                                    <li class="@(ViewBag.CurrentSub == "Payment" ? "active" : "")">@Html.ActionLink("Payment & Account Settings", "List", "Intergration")</li>
+                                    <li class="@(ViewBag.CurrentSub == "Misc" ? "active" : "")">@Html.ActionLink("Miscellaneous Setting", "List", "Intergration")</li>
+                                </ul>
+                            </li>
+
+                            <li class="sidenav-item has-subnav @(ViewBag.Current == "User" ? "active open" : "")">
+                                <a href="#" aria-haspopup="true">
+                                    <span class="sidenav-icon icon icon-users"></span>
+                                    <span class="sidenav-label">Users</span>
+                                </a>
+                                <ul class="sidenav-subnav collapse">
+                                    <li class="sidenav-subheading">User Management</li>
+                                    <li class="@(ViewBag.CurrentSub == "Administrator" ? "active" : "")"><a href="~/Administrator/List">Administrators</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "Employee" ? "active" : "")"><a href="~/Employee/List">Employees</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "Customer" ? "active" : "")"><a href="~/Customer/List">Customers</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "Supplier" ? "active" : "")"><a href="~/Supplier/List">Suppliers</a></li>
+                                </ul>
+                            </li>
+                            @*<li class="sidenav-item has-subnav @(ViewBag.Current == "Approval" ? "active open" : "")">
+                                    <a href="#" aria-haspopup="true">
+                                        <span class="sidenav-icon icon icon-thumbs-up"></span>
+                                        <span class="sidenav-label">Approvals</span>
+                                    </a>
+                                    <ul class="sidenav-subnav collapse">
+                                        <li class="sidenav-subheading">Approvals</li>
+                                        <li class="@(ViewBag.CurrentSub == "ApprovalScheme" ? "active" : "")">@Html.ActionLink("Approval Schemes", "List", "ApprovalScheme")</li>
+                                        <li class="@(ViewBag.CurrentSub == "ApprovalGroup" ? "active" : "")">@Html.ActionLink("Approval Groups", "List", "ApprovalGroup")</li>
+                                    </ul>
+                                </li>*@
+
+                            <!-- Vehicle Management -->
+                            <li class="sidenav-heading">Vehicle Management</li>
+                            <li class="sidenav-item has-subnav @(ViewBag.Current == "Vehicle" ? "active open" : "")">
+                                <a href="#" aria-haspopup="true">
+                                    <span class="sidenav-icon icon icon-truck"></span>
+                                    <span class="sidenav-label">Vehicles</span>
+                                </a>
+                                <ul class="sidenav-subnav collapse">
+                                    <li class="sidenav-subheading">Vehicles</li>
+                                    <li class="@(ViewBag.CurrentSub == "BodyType" ? "active" : "")"><a href="~/VehicleBodyType/List">Body Types</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "Make" ? "active" : "")"><a href="~/VehicleMake/List">Makes</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "Model" ? "active" : "")"><a href="~/VehicleModel/List">Models</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "Vehicles" ? "active" : "")"><a href="~/Vehicles/List">Vehicles</a></li>
+                                </ul>
+                            </li>
+                            <li class="sidenav-item has-subnav @(ViewBag.Current == "Trip" ? "active open" : "")">
+                                <a href="#" aria-haspopup="true">
+                                    <span class="sidenav-icon icon icon-road"></span>
+                                    <span class="sidenav-label">Trips</span>
+                                </a>
+                                <ul class="sidenav-subnav collapse">
+                                    <li class="sidenav-subheading">Trips</li>
+                                    <li class="@(ViewBag.CurrentSub == "Driver" ? "active" : "")">@Html.ActionLink("Drivers", "List", "VehicleDriver")</li>
+                                    <li class="@(ViewBag.CurrentSub == "Trips" ? "active" : "")">@Html.ActionLink("Trips", "List", "Trip")</li>
+                                    <li class="@(ViewBag.CurrentSub == "Fuel" ? "active" : "")">@Html.ActionLink("Fuel Entry", "List", "FuelEntry")</li>
+                                </ul>
+                            </li>
+                            <li class="sidenav-item has-subnav @(ViewBag.Current == "Maintain" ? "active open" : "")">
+                                <a href="#" aria-haspopup="true">
+                                    <span class="sidenav-icon icon icon-road"></span>
+                                    <span class="sidenav-label">Maintenance</span>
+                                </a>
+                                <ul class="sidenav-subnav collapse">
+                                    <li class="sidenav-subheading">Maintenance</li>
+                                    <li class="@(ViewBag.CurrentSub == "Driver" ? "active" : "")">@Html.ActionLink("Drivers", "List", "VehicleDriver")</li>
+                                </ul>
+                            </li>
+                            <!-- Workshop Management -->
+                            <li class="sidenav-heading">Workshop Management</li>
+                            <li class="sidenav-item has-subnav @(ViewBag.Current == "Jobs" ? "active open" : "")">
+                                <a href="#" aria-haspopup="true">
+                                    <span class="sidenav-icon icon icon-edit"></span>
+                                    <span class="sidenav-label">Jobs</span>
+                                </a>
+                                <ul class="sidenav-subnav collapse">
+                                    <li class="sidenav-subheading">Jobs</li>
+                                    @*<li class="@(ViewBag.CurrentSub == "Inspect" ? "active" : "")">@Html.ActionLink("Inspections", "List", "Inspection")</li>*@
+                                    @*<li class="@(ViewBag.CurrentSub == "Status" ? "active" : "")">@Html.ActionLink("Job Status", "List", "Jobstatus")</li>*@
+                                    <li class="@(ViewBag.CurrentSub == "Type" ? "active" : "")"><a href="~/JobType/List">Categories</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "Package" ? "active" : "")"><a href="~/JobPackage/List">Service Packages</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "Task" ? "active" : "")"><a href="~/JobTask/List">Job Tasks</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "Job" ? "active" : "")"><a href="~/Job/List">Jobs</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "InvoiceJob" ? "active" : "")"><a href="~/SaleInvoiceJob/List">Invoices</a></li>
+                                </ul>
+                            </li>
+                            <!-- //Workshop Management -->
+                            <!-- Stock Management -->
+                            <li class="sidenav-heading">Stock Management</li>
+                            <li class="sidenav-item has-subnav @(ViewBag.Current == "Stock" ? "active open" : "")">
+                                <a href="#" aria-haspopup="true">
+                                    <span class="sidenav-icon icon icon-dropbox"></span>
+                                    <span class="sidenav-label">Inventory</span>
+                                </a>
+                                <ul class="sidenav-subnav collapse">
+                                    <li class="sidenav-subheading">Inventory</li>
+                                    <li class="@(ViewBag.CurrentSub == "Warehouse" ? "active" : "")"><a href="~/StockWarehouse/List">Warehouse</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "Brand" ? "active" : "")"><a href="~/StockBrand/List">Brands</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "Type" ? "active" : "")"><a href="~/StockType/List">Categories</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "SubType" ? "active" : "")"><a href="~/StockSubType/List">Sub Categories</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "Product" ? "active" : "")"><a href="~/Stock/List">Products</a></li>
+                                    <li class="@(ViewBag.CurrentSub == "POrder" ? "active" : "")"><a href="~/StockPO/List">Purchase Order</a></li>
+                                    @*<li class="@(ViewBag.CurrentSub == "IssueReturn" ? "active" : "")">@Html.ActionLink("Issue and Returns", "List", "StockIssueReturn")</li>
+                                        <li class="@(ViewBag.CurrentSub == "Transfer" ? "active" : "")">@Html.ActionLink("Stock Transfer", "List", "StockTransfer")</li>
+                                        <li class="@(ViewBag.CurrentSub == "Adjustment" ? "active" : "")">@Html.ActionLink("Stock Adjustment", "List", "StockAdjustment")</li>
+                                        <li class="@(ViewBag.CurrentSub == "Expired" ? "active" : "")">@Html.ActionLink("Expired Stock", "List", "StockExpired")</li>*@
+                                </ul>
+                            </li>
+                            <li class="sidenav-item has-subnav @(ViewBag.Current == "Resource" ? "active open" : "")">
+                                    <a href="#" aria-haspopup="true">
+                                        <span class="sidenav-icon icon icon-codepen"></span>
+                                        <span class="sidenav-label">Office Asset</span>
+                                    </a>
+                                    <ul class="sidenav-subnav collapse">
+                                        <li class="sidenav-subheading">Office Asset</li>
+                                        <li class="@(ViewBag.CurrentSub == "Rbrand" ? "active" : "")"><a href="~/ResourceBrand/List">Brands</a></li>
+                                        <li class="@(ViewBag.CurrentSub == "Type" ? "active" : "")"><a href="~/ResourceType/List">Categories</a></li>
+                                        <li class="@(ViewBag.CurrentSub == "SubType" ? "active" : "")"><a href="~/ResourceSubType/List">Sub Categories</a></li>
+                                        <li class="@(ViewBag.CurrentSub == "Assets" ? "active" : "")"><a href="~/Resource/List">Resources</a></li>
+                                        <li class="@(ViewBag.CurrentSub == "Assign" ? "active" : "")"><a href="~/ResourceAssign/List">Issue and Returns</a></li>
+                                        <li class="@(ViewBag.CurrentSub == "Damaged" ? "active" : "")"><a href="~/ResourceDamaged/List">Damaged Items</a></li>
+                                        <li class="@(ViewBag.CurrentSub == "ROrder" ? "active" : "")"><a href="~/ResourceOrder/List">Purchase Order</a></li>
+                                    </ul>
+                                </li>
+
+                            <!-- Sales & Account -->
+                            <li class="sidenav-heading">Sales & Accounts</li>
+                            <li class="sidenav-item has-subnav @(ViewBag.Current == "Sales" ? "active open" : "")">
+                                <a href="#" aria-haspopup="true">
+                                    <span class="sidenav-icon icon icon-shopping-cart"></span>
+                                    <span class="sidenav-label">Sales</span>
+                                </a>
+                                <ul class="sidenav-subnav collapse">
+                                    <li class="sidenav-subheading">Sales</li>
+                                    @*<li><a href="/PurchaseOrder/List">Purchase Orders</a></li>*@
+                                    <li class="@(ViewBag.CurrentSub == "InvoiceJob" ? "active" : "")"><a href="~/SaleInvoiceJob/List">Invoices - Jobs</a></li>
+                                    @*<li><a href="/InvoiceProduct/List">Invoices - Products</a></li>
+                                        <li><a href="/InvoiceProduct/List">Recurring invoice</a></li>
+                                        <li><a href="#">Quotations</a></li>
+                                        <li><a href="#">Estimates</a></li>
+                                        <li><a href="#">Credit Note</a></li>*@
+                                </ul>
+                            </li>
+
+                            @*<li class="sidenav-item has-subnav">
+                                    <a href="#" aria-haspopup="true">
+                                        <span class="sidenav-icon icon icon-money"></span>
+                                        <span class="sidenav-label">Accounts</span>
+                                    </a>
+                                    <ul class="sidenav-subnav collapse">
+                                        <li class="sidenav-subheading">Accounts</li>
+                                        <li><a href="#">Expenses Types</a></li>
+                                        <li><a href="#">Expenses</a></li>
+                                        <li><a href="#">Tax</a></li>
+                                        <li><a href="#">Purchase Orders</a></li>
+                                        <li><a href="#">Invoices</a></li>
+                                        <li><a href="#">Quotations</a></li>
+                                    </ul>
+                                </li>
+                                <li class="sidenav-item has-subnav">
+                                    <a href="#" aria-haspopup="true">
+                                        <span class="sidenav-icon icon icon-calculator"></span>
+                                        <span class="sidenav-label">Transactions</span>
+                                    </a>
+                                    <ul class="sidenav-subnav collapse">
+                                        <li class="sidenav-subheading">Transactions</li>
+                                        <li><a href="/PurchaseOrderType/List">Expenses</a></li>
+                                        <li><a href="#">Bank and Cash</a></li>
+                                    </ul>
+                                </li>*@
+                            <!-- //Sales & Account -->
+                            <!-- Human Resource Management -->
+                            @*<li class="sidenav-heading" id="hrm01">HRM</li>
+                                <li class="sidenav-item has-subnav @(ViewBag.Current == "Attendance" ? "active open" : "")">
+                                    <a href="#" aria-haspopup="true">
+                                        <span class="sidenav-icon icon icon-calendar"></span>
+                                        <span class="sidenav-label">Attendance</span>
+                                    </a>
+                                    <ul class="sidenav-subnav collapse">
+                                        <li class="sidenav-subheading">Attendance</li>
+                                        <li class="@(ViewBag.CurrentSub == "AttendanceScheme" ? "active" : "")">@Html.ActionLink("Attendance Schemes", "List", "AttendanceScheme")</li>
+
+                                    </ul>
+                                </li>
+                                <li class="sidenav-item has-subnav @(ViewBag.Current == "Claim" ? "active open" : "")">
+                                    <a href="#" aria-haspopup="true">
+                                        <span class="sidenav-icon icon icon-money"></span>
+                                        <span class="sidenav-label">Claim</span>
+                                    </a>
+                                    <ul class="sidenav-subnav collapse">
+                                        <li class="sidenav-subheading">Claim</li>
+                                        <li class="@(ViewBag.CurrentSub == "ClaimScheme" ? "active" : "")">@Html.ActionLink("Claim Schemes", "List", "ClaimScheme")</li>
+                                        <li class="@(ViewBag.CurrentSub == "ClaimTypes" ? "active" : "")">@Html.ActionLink("Claim Types", "List", "ClaimType")</li>
+                                        <li class="@(ViewBag.CurrentSub == "ClaimSubTypes" ? "active" : "")">@Html.ActionLink("Claim Sub Types", "List", "ClaimSubType")</li>
+                                    </ul>
+                                </li>
+                                <li class="sidenav-item has-subnav @(ViewBag.Current == "Leave" ? "active open" : "")">
+                                    <a href="#" aria-haspopup="true">
+                                        <span class="sidenav-icon icon icon-plane"></span>
+                                        <span class="sidenav-label">Leave</span>
+                                    </a>
+                                    <ul class="sidenav-subnav collapse">
+                                        <li class="sidenav-subheading">Leave</li>
+                                        <li class="@(ViewBag.CurrentSub == "LeaveScheme" ? "active" : "")">@Html.ActionLink("Leave Schemes", "List", "LeaveScheme")</li>
+                                        <li class="@(ViewBag.CurrentSub == "LeaveTypes" ? "active" : "")">@Html.ActionLink("Leave Types", "List", "LeaveType")</li>
+                                    </ul>
+                                </li>
+                                <li class="sidenav-item has-subnav @(ViewBag.Current == "Loan" ? "active open" : "")">
+                                    <a href="#" aria-haspopup="true">
+                                        <span class="sidenav-icon icon icon-money"></span>
+                                        <span class="sidenav-label">Loan</span>
+                                    </a>
+                                    <ul class="sidenav-subnav collapse">
+                                        <li class="sidenav-subheading">Loan</li>
+                                        <li class="@(ViewBag.CurrentSub == "LoanScheme" ? "active" : "")">@Html.ActionLink("Loan Schemes", "List", "LoanScheme")</li>
+                                        <li class="@(ViewBag.CurrentSub == "LoanTypes" ? "active" : "")">@Html.ActionLink("Loan Types", "List", "LoanType")</li>
+                                    </ul>
+                                </li>
+                                <li class="sidenav-item has-subnav" id="hrm06">
+                                    <a href="#" aria-haspopup="true">
+                                        <span class="sidenav-icon icon icon-dollar"></span>
+                                        <span class="sidenav-label">Payroll</span>
+                                    </a>
+                                    <ul class="sidenav-subnav collapse">
+                                        <li class="sidenav-subheading">Payroll</li>
+                                        <li><a href="#">Salary Scheme</a></li>
+
+                                    </ul>
+                                </li>
+                                <li class="sidenav-item has-subnav" id="hrm07">
+                                    <a href="#" aria-haspopup="true">
+                                        <span class="sidenav-icon icon icon-globe"></span>
+                                        <span class="sidenav-label">Recruitment</span>
+                                    </a>
+                                    <ul class="sidenav-subnav collapse">
+                                        <li class="sidenav-subheading">Recruitment</li>
+                                        <li><a href="#">Posted Jobs</a></li>
+                                        <li><a href="#">Job Applications</a></li>
+
+                                    </ul>
+                                </li>*@
+                            <!-- //Human Resource Management -->
+                            <!-- Project Management -->
+                            @*<li class="sidenav-heading">Project Management</li>
+                                <li class="sidenav-item has-subnav @(ViewBag.Current == "Project" ? "active open" : "")">
+                                    <a href="#" aria-haspopup="true">
+                                        <span class="sidenav-icon icon icon-sitemap"></span>
+                                        <span class="sidenav-label">Projects</span>
+                                    </a>
+                                    <ul class="sidenav-subnav collapse">
+                                        <li class="sidenav-subheading">Projects</li>
+                                        <li class="@(ViewBag.CurrentSub == "Projectlist" ? "active" : "")">@Html.ActionLink("Projects", "List", "Project")</li>
+                                        <li class="@(ViewBag.CurrentSub == "Tasklist" ? "active" : "")">@Html.ActionLink("Tasks", "List", "Task")</li>
+                                    </ul>
+                                </li>*@
+                            <!-- //Project Management -->
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="layout-content">
+            @RenderBody()
+        </div>
+
+        <div class="layout-footer">
+            <div class="layout-footer-body">
+                <small class="version">Version @Session["BuildVersion"]</small>
+                <small class="copyright">@DateTime.Now.Year &copy; Developed By <a href="#">System Solutions</a></small>
+            </div>
+        </div>
+    </div>
+    <script src="~/Content/js/vendor.min.js"></script>
+    <script src="~/Content/js/elephant.min.js"></script>
+    <script src="~/Content/js/application.min.js"></script>
+    <script src="~/Content/js/toastr.js"></script>
+    <script src="~/Content/js/toastr.min.js"></script>
+    <script src="~/Content/js/demo.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

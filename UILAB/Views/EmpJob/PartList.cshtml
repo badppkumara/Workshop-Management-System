@@ -1,0 +1,63 @@
+﻿@model IEnumerable<ERP.Models.vw_JobTaskPartDetailTR>
+@{
+    ViewBag.Title = "PartList";
+    Layout = null;
+}
+
+<div class="table-responsive">
+    <table id="myTable" class="table table-bordered table-striped table-nowrap dataTable" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+
+                <th>
+                    Product Type
+                </th>
+                <th>
+                    Product
+                </th>
+                <th>
+                    Qty
+                </th>
+                <th>
+                    Job Task
+                </th>
+                <th>
+                    Remark
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SubTypeName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Product)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Qty)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TaskName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Remark)
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+
+</script>
+
+
+

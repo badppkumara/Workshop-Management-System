@@ -1,0 +1,29 @@
+﻿@model UILAB.Models.vw_SalesInvoiceTR
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Admin/Dashboard">Dashboard</a> | <a href="~/SaleInvoiceJob/List">Invoices</a> | @Model.InvoiceNo
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">@Model.InvoiceNo</span></h5>
+    </div>
+    <div class="row gutter-xs">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="col-md-3">
+                        @Html.Action("UpdateInvoice")
+                    </div>
+                    <div class="col-md-9">
+                        @Html.Action("InvoiceDetail")
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

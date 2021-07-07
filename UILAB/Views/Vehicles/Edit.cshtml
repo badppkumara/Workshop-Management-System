@@ -1,0 +1,434 @@
+﻿@model UILAB.Models.VehicleTR
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["ErrorMessage"]' != "") {
+            $("#errorMsg").show();
+        }
+        else {
+            $("#errorMsg").hide();
+        }
+
+        if ('@TempData["ErrorMessageModal"]' != "") {
+            $("#ErrorMessageModal").show();
+        }
+        else {
+            $("#ErrorMessageModal").hide();
+        }
+    });
+
+    $(document).on('change', '#checkall', function () {
+        if ($(this).prop('checked')) {
+            $('#select-make').attr('disabled', 'disabled');
+            $('#select-model').attr('disabled', 'disabled');
+            //$('#select-customer').attr('disabled', 'disabled');
+            $('#newmake').removeAttr('disabled', 'disabled');
+            $('#newmodel').removeAttr('disabled', 'disabled');
+            $('#demo-select2-2').removeAttr('disabled', 'disabled');
+            $('#demo-select2-4').removeAttr('disabled', 'disabled');
+            //$('#firstname').removeAttr('disabled', 'disabled');
+            //$('#lastname').removeAttr('disabled', 'disabled');
+            //$('#mobile').removeAttr('disabled', 'disabled');
+        } else {
+            $('#select-make').removeAttr('disabled', 'disabled');
+            $('#select-model').removeAttr('disabled', 'disabled');
+            //$('#select-customer').removeAttr('disabled', 'disabled');
+            $('#newmake').attr('disabled', 'disabled');
+            $('#demo-select2-2').attr('disabled', 'disabled');
+            $('#newmodel').attr('disabled', 'disabled');
+            $('#demo-select2-4').attr('disabled', 'disabled');
+            //$('#firstname').attr('disabled', 'disabled');
+            //$('#lastname').attr('disabled', 'disabled');
+            //$('#mobile').attr('disabled', 'disabled');
+        }
+    });
+
+    $(document).on('change', '#checkall2', function () {
+        if ($(this).prop('checked')) {
+            $('#select-customer').attr('disabled', 'disabled');
+            $('#firstname').removeAttr('disabled', 'disabled');
+            $('#lastname').removeAttr('disabled', 'disabled');
+            $('#company').removeAttr('disabled', 'disabled');
+            $('#mobile').removeAttr('disabled', 'disabled');
+            $('#phone').removeAttr('disabled', 'disabled');
+            $('#fax').removeAttr('disabled', 'disabled');
+            $('#address1').removeAttr('disabled', 'disabled');
+            $('#address2').removeAttr('disabled', 'disabled');
+            $('#address3').removeAttr('disabled', 'disabled');
+            $('#email').removeAttr('disabled', 'disabled');
+        } else {
+            $('#select-customer').removeAttr('disabled', 'disabled');
+            $('#firstname').attr('disabled', 'disabled');
+            $('#lastname').attr('disabled', 'disabled');
+            $('#mobile').attr('disabled', 'disabled');
+            $('#phone').attr('disabled', 'disabled');
+            $('#fax').attr('disabled', 'disabled');
+            $('#address1').attr('disabled', 'disabled');
+            $('#address2').attr('disabled', 'disabled');
+            $('#address3').attr('disabled', 'disabled');
+            $('#email').attr('disabled', 'disabled');
+            $('#company').attr('disabled', 'disabled');
+        }
+    });
+
+    $(document).ready(function () {
+        $('#demo-select2-2').on('change', function () {
+            var optionText = $("#demo-select2-2 option:selected").text();
+            $('#newmake').val(optionText);
+        });
+    });
+
+</script>
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Admin/Dashboard">Dashboard</a> | <a href="~/Vehicles/List">Vehicles</a> | Update Vehicle
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Vehicle</span></h5>
+    </div>
+    <div class="row gutter-xs">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    @Html.ActionLink("Back to List", "List", null, new { @class = "btn btn-sm btn-success" })
+                </div>
+                <div class="card-body">
+                    <div class="col-md-8">
+
+                        @using (Html.BeginForm("Edit", "Vehicles", FormMethod.Post, new { enctype = "multipart/form-data", @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+                            <div class="demo-form-wrapper">
+
+                                <div class="form form-horizontal">
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    @Html.HiddenFor(model => model.VehicleID)
+
+                                    <div class="form-group" id="errorMsg">
+                                        <label class="col-sm-3 control-label"></label>
+                                        <div class="col-sm-9">
+                                            <div class="alert alert-danger">
+                                                <span class="sidenav-icon icon icon-question-circle"></span> Vehicle <strong>"@TempData["ErrorMessage"]"</strong> Exists...!
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <label class="col-sm-3 control-label">Vehicle <span style="color: red">*</span></label>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.PlateNo, new { htmlAttributes = new { placeholder = "Plate No", @class = "form-control", @style = "text-transform:uppercase" } })
+                                            @Html.ValidationMessageFor(model => model.PlateNo, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.DropDownListFor(model => model.MakeID, ViewBag.MakeList as SelectList, "Select Make", new { @class = "form-control", @id = "select-make" })
+                                            @Html.ValidationMessageFor(model => model.MakeID, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.DropDownListFor(model => model.ModelID, ViewBag.ModelList as SelectList, "Select Model", new { @class = "form-control", @id = "select-model" })
+                                            @Html.ValidationMessageFor(model => model.ModelID, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <label class="col-sm-3 control-label">Model </label>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.ModelNo, new { htmlAttributes = new { placeholder = "Model No.", @class = "form-control", } })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.Year, new { htmlAttributes = new { placeholder = "Year", @class = "form-control" } })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.Color, new { htmlAttributes = new { placeholder = "Colour", @class = "form-control" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <label class="col-sm-3 control-label">Vin Numbers </label>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.ChassisNo, new { htmlAttributes = new { placeholder = "Chassis No", @class = "form-control" } })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.EngineNo, new { htmlAttributes = new { placeholder = "Engine No", @class = "form-control" } })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.EngineCC, new { htmlAttributes = new { placeholder = "EngineCC", @class = "form-control" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <label class="col-sm-3 control-label">Current Mileages </label>
+                                        <div class="col-sm-3">
+                                            <input type="text" id="mileage" placeholder="Mileage" name="mileage" class="form-control"
+                                                   data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" value="@TempData["mileage"]" />
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <input type="text" id="hubo" placeholder="Hubo" name="hubo" class="form-control"
+                                                   data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" value="@TempData["hubo"]" />
+                                        </div>
+                                        <div class="col-sm-3">
+
+                                            <input type="text" id="ruc" placeholder="RUC" name="ruc" class="form-control"
+                                                   data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" value="@TempData["ruc"]" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <label class="col-sm-3 control-label"> </label>
+                                        <div class="col-sm-3">
+                                            @Html.DropDownListFor(model => model.FuelTypeID, ViewBag.FuelList as SelectList, "--- Select Fuel Type ---", new { @class = "form-control" })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.DropDownListFor(model => model.TransTypeID, ViewBag.TransList as SelectList, "--- Select Transmission ---", new { @class = "form-control" })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.TyreSize, new { htmlAttributes = new { placeholder = "Tyre Size", @class = "form-control" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <label class="col-sm-3 control-label">Registrations</label>
+                                        <div class="col-sm-3" style="z-index: 99999 !important">
+                                            <div class="input-with-icon">
+                                                <input id="regodate" name="regodate" class="form-control" type="text" data-provide="datepicker" data-date-autoclose="true" data-date-format="dd-MM-yyyy"
+                                                       data-date-today-highlight="true" placeholder="Rego Expiry Date" value="@TempData["regodate"]" autocomplete="off">
+                                                <span class="icon icon-calendar input-icon"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3" style="z-index: 99999 !important">
+                                            <div class="input-with-icon">
+                                                <input id="wofdate" name="wofdate" class="form-control" type="text" data-provide="datepicker" data-date-autoclose="true" data-date-format="dd-MM-yyyy"
+                                                       value="@TempData["wofdate"]" data-date-today-highlight="true" placeholder="WOF Expiry Date" autocomplete="off">
+                                                <span class="icon icon-calendar input-icon"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <label class="col-sm-3 control-label">Vehicle Owned By </label>
+                                        <div class="col-sm-9">
+                                            @Html.DropDownListFor(model => model.CustomerID, ViewBag.CustomerList as SelectList, "--- Select Customer ---", new { @class = "form-control", @id = "select-customer" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <label class="col-sm-3 control-label"></label>
+                                        <div class="col-sm-9">
+
+                                            @if (Model.RegisterTypeID == 1)
+                                            {
+                                                <label class="custom-control custom-control-primary custom-radio">
+                                                    <input class="custom-control-input" type="radio" name="registertype" id="registertype" checked="checked" value="1">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <small class="custom-control-label">Customer</small>
+                                                </label>
+                                                <label class="custom-control custom-control-primary custom-radio">
+                                                    <input class="custom-control-input" type="radio" name="registertype" id="registertype" value="2">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <small class="custom-control-label">Company Vehicle</small>
+                                                </label>
+                                                <label class="custom-control custom-control-primary custom-radio">
+                                                    <input class="custom-control-input" type="radio" name="registertype" id="registertype" value="3">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <small class="custom-control-label">Contractor</small>
+                                                </label>
+                                            }
+
+                                            @if (Model.RegisterTypeID == 2)
+                                            {
+                                                <label class="custom-control custom-control-primary custom-radio">
+                                                    <input class="custom-control-input" type="radio" name="registertype" id="registertype" value="1">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <small class="custom-control-label">Customer</small>
+                                                </label>
+                                                <label class="custom-control custom-control-primary custom-radio">
+                                                    <input class="custom-control-input" type="radio" name="registertype" id="registertype" checked="checked" value="2">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <small class="custom-control-label">Company Vehicle</small>
+                                                </label>
+                                                <label class="custom-control custom-control-primary custom-radio">
+                                                    <input class="custom-control-input" type="radio" name="registertype" id="registertype" value="3">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <small class="custom-control-label">Contractor</small>
+                                                </label>
+                                            }
+
+                                            @if (Model.RegisterTypeID == 3)
+                                            {
+                                                <label class="custom-control custom-control-primary custom-radio">
+                                                    <input class="custom-control-input" type="radio" name="registertype" id="registertype" value="1">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <small class="custom-control-label">Customer</small>
+                                                </label>
+                                                <label class="custom-control custom-control-primary custom-radio">
+                                                    <input class="custom-control-input" type="radio" name="registertype" id="registertype" value="2">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <small class="custom-control-label">Company Vehicle</small>
+                                                </label>
+                                                <label class="custom-control custom-control-primary custom-radio">
+                                                    <input class="custom-control-input" type="radio" name="registertype" id="registertype" checked="checked" value="3">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <small class="custom-control-label">Contractor</small>
+                                                </label>
+                                            }
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group form-group-sm">
+                                        <label class="col-sm-3 control-label">Description </label>
+                                        <div class="col-sm-9">
+                                            @Html.TextAreaFor(model => model.Remark, 5, 40, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <label class="col-sm-3 control-label"></label>
+                                        <div class="col-sm-9">
+                                            <input type="submit" value="Update" class="btn btn-primary" id="btnSave" name="SaveEntry" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="tabbable tabs">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#a" data-toggle="tab">Add Make, Model and Customer</a></li>
+                                @*<li><a href="#b" data-toggle="tab">Add Customer</a></li>*@
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="a">
+                                    <div class="row">
+                                        <div class="card-body">
+                                            <label class="custom-control custom-control-primary custom-checkbox">
+                                                <input class="custom-control-input" type="checkbox" name="checkall" id="checkall" value="True">
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-label"></span>
+                                            </label>
+                                            <strong>Create New Make and Model</strong>
+                                            <hr style="margin:5px" />
+                                            <div class="row">
+                                                <div class="form-group form-group-sm" style="margin-top:5px">
+                                                    <div class="col-sm-6">
+                                                        <select name="newmakeid" class="form-control" id="demo-select2-2" disabled="disabled">
+                                                            @{
+                                                                using (var db = new DatabaseContext())
+                                                                {
+                                                                    var task = (from data in db.VehicleMakes orderby data.Make ascending select data).ToList();
+                                                                    <option value="-1">--- Select Make ---</option>
+                                                                    foreach (var name in task)
+                                                                    {
+                                                                        <option value="@name.MakeID">@name.Make</option>
+                                                                    }
+                                                                }
+
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input id="newmake" name="newmake" class="form-control" type="text" placeholder="Type Make if not in Selection" disabled="disabled">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group form-group-sm" style="margin-top:5px">
+                                                    <div class="col-sm-6">
+                                                        <input id="newmodel" name="newmodel" class="form-control" type="text" placeholder="Model Name" disabled="disabled" onClick="onClickModel();">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="margin-top:10px"></div>
+
+                                            <label class="custom-control custom-control-primary custom-checkbox">
+                                                <input class="custom-control-input" type="checkbox" name="checkall2" id="checkall2" value="True">
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-label"></span>
+                                            </label>
+                                            <strong>Create New Customer</strong>
+                                            <hr style="margin:5px" />
+
+                                            <div class="row">
+                                                <div class="form-group form-group-sm" style="margin-top:5px">
+                                                    <div class="col-sm-4">
+                                                        <input id="firstname" name="firstname" class="form-control" type="text" placeholder="First Name" disabled="disabled">
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <input id="lastname" name="lastname" class="form-control" type="text" placeholder="Last Name" disabled="disabled">
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <input id="mobile" name="mobile" class="form-control" type="text" placeholder="Mobile" disabled="disabled">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                @*<div class="tab-pane" id="b">
+                                        <div class="row">
+                                            <div class="card-body">
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>*@
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        $('#CreateFormID').validate({
+            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+            errorElement: 'div',
+            errorPlacement: function (error, e) {
+                e.parents('.form-group > div').append(error);
+            },
+            highlight: function (e) {
+
+                $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                $(e).closest('.help-block').remove();
+            },
+            success: function (e) {
+                e.closest('.form-group').removeClass('has-success has-error');
+                e.closest('.help-block').remove();
+            },
+            rules: {
+                'PlateNo': {
+                    required: true,
+                },
+                'MakeID': {
+                    required: true,
+                },
+                'ModelID': {
+                    required: true,
+                }
+            },
+            messages: {
+                'PlateNo': 'This Field Required'
+            },
+            messages: {
+                'MakeID': 'This Field Required'
+            },
+            messages: {
+                'ModelID': 'This Field Required'
+            }
+        });
+    });
+</script>

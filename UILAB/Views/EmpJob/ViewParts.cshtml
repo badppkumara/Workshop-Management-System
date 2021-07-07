@@ -1,0 +1,58 @@
+﻿@model IEnumerable<UILAB.Models.vw_JobTaskPartDetailTR>
+@{
+    ViewBag.Title = "ViewParts";
+    Layout = null;
+}
+
+<div class="row">
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="myTable" class="table table-bordered table-striped table-nowrap dataTable" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center">
+                                Product Type
+                            </th>
+                            <th style="text-align:center">
+                                Product
+                            </th>
+                            <th style="text-align:center">
+                                Qty
+                            </th>
+                            <th style="text-align:center">
+                                Unit Price
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td style="font-size: small; text-align:center">
+                                    @Html.DisplayFor(modelItem => item.SubTypeName)
+                                </td>
+                                <td style="font-size: small">
+                                    @Html.DisplayFor(modelItem => item.Product)
+                                </td>
+                                <td style="font-size: small">
+                                    @Html.DisplayFor(modelItem => item.Qty)
+                                <td style="font-size: small">
+                                    @Html.DisplayFor(modelItem => item.UnitPrice)
+                                </td>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>
+

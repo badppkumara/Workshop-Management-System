@@ -1,0 +1,234 @@
+﻿@model UILAB.Models.JobTR
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "CompleteJob";
+    Layout = null;
+}
+
+<script type="text/javascript">
+
+    $(document).on('change', '#jobcomplete', function () {
+        if ($(this).prop('checked')) {
+            $('#status').removeAttr('disabled', 'disabled');
+            $('#duedate').removeAttr('disabled', 'disabled');
+            $('#repairnote').removeAttr('disabled', 'disabled');
+            $('#repair').removeAttr('disabled', 'disabled');
+            $('#partnote').removeAttr('disabled', 'disabled');
+            $('#partamount').removeAttr('disabled', 'disabled');
+            $('#materialnote').removeAttr('disabled', 'disabled');
+            $('#material').removeAttr('disabled', 'disabled');
+            $('#addfreight').removeAttr('disabled', 'disabled');
+            $('#freight').removeAttr('disabled', 'disabled');
+            $('#travel').removeAttr('disabled', 'disabled');
+            $('#excess').removeAttr('disabled', 'disabled');
+        } else {
+            $('#status').attr('disabled', 'disabled');
+            $('#duedate').attr('disabled', 'disabled');
+            $('#repairnote').attr('disabled', 'disabled');
+            $('#repair').attr('disabled', 'disabled');
+            $('#partnote').attr('disabled', 'disabled');
+            $('#partamount').attr('disabled', 'disabled');
+            $('#materialnote').attr('disabled', 'disabled');
+            $('#material').attr('disabled', 'disabled');
+            $('#addfreight').attr('disabled', 'disabled');
+            $('#freight').attr('disabled', 'disabled');
+            $('#travel').attr('disabled', 'disabled');
+            $('#excess').attr('disabled', 'disabled');
+        }
+    });
+
+    $(document).ready(function () {
+        $('#demo-select2-4').on('change', function () {
+            //var optionValue = $(this).val();
+            //var optionText = $('#dropdownList option[value="'+optionValue+'"]').text();
+            var optionText = $("#demo-select2-4 option:selected").text();
+            var arr = optionText.split(" ");
+            $('#firstname').val(arr[0]);
+            $('#lastname').val(arr[1]);
+        });
+    });
+
+
+</script>
+@using (Html.BeginForm("CompleteJob", "Job", FormMethod.Post, new { @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+{
+    <div class="form-group form-group-sm" style="margin-top:10px">
+        <label class="custom-control custom-control-primary custom-checkbox">
+            <input class="custom-control-input" type="checkbox" name="jobcomplete" id="jobcomplete" value="True">
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-label"></span>
+        </label>
+        <strong>Create Invoice</strong>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group form-group-sm">
+                <label>Status </label>
+                @Html.DropDownListFor(model => model.StatusID, ViewBag.statuslist as SelectList, "--- Select Status ---", new { @class = "form-control", @id = "status", @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.StatusID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group form-group-sm">
+                <label>Due Date </label>
+                <div class="input-with-icon">
+                    <input id="duedate" name="duedate" class="form-control" type="text" data-provide="datepicker" data-date-autoclose="true" data-date-format="dd-mm-yyyy" disabled="disabled"
+                           data-date-today-highlight="true" autocomplete="off" value="@TempData["duedate"]">
+                    <span class="icon icon-calendar input-icon"></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-3">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group form-group-sm">
+                <label>Repair Description </label>
+                <textarea id="repairnote" class="form-control" rows="2" name="repairnote" disabled="disabled">@TempData["repairnote"]</textarea>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group form-group-sm">
+                <label>Parts Description </label>
+                <textarea id="partnote" class="form-control" rows="2" name="partnote" disabled="disabled">@TempData["partnote"]</textarea>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group form-group-sm">
+                <label>Material Description </label>
+                <textarea id="materialnote" class="form-control" rows="2" name="materialnote" disabled="disabled">@TempData["materialnote"]</textarea>
+            </div>
+        </div>
+        <div class="col-md-3">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group form-group-sm">
+                <label>Repair Amount </label>
+                <input type="text" id="repair" placeholder="" name="repair" class="form-control" disabled="disabled" value="@TempData["repair"]"
+                       data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group form-group-sm">
+                <label>Parts Amount </label>
+                <input type="text" id="partamount" placeholder="" name="partamount" class="form-control" disabled="disabled" value="@TempData["partamount"]"
+                       data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group form-group-sm">
+                <label>Material Amount </label>
+                <input type="text" id="material" placeholder="" name="material" class="form-control" disabled="disabled" value="@TempData["material"]"
+                       data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" />
+            </div>
+        </div>
+        <div class="col-md-3">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group form-group-sm">
+                <label>Add Freight Amount</label>
+                <input type="text" id="addfreight" placeholder="" name="addfreight" class="form-control" disabled="disabled" value="@TempData["addfreight"]"
+                       data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group form-group-sm">
+                <label>Freight Amount</label>
+                <input type="text" id="freight" placeholder="" name="freight" class="form-control" disabled="disabled" value="@TempData["freight"]"
+                       data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group form-group-sm">
+                <label>Travel Amount</label>
+                <input type="text" id="travel" placeholder="" name="travel" class="form-control" disabled="disabled" value="@TempData["travel"]"
+                       data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group form-group-sm">
+                <label>Excess Amount</label>
+                <input type="text" id="excess" placeholder="" name="excess" class="form-control" disabled="disabled" value="@TempData["excess"]"
+                       data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" />
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="form-group form-group-sm">
+        <input type="submit" value="Complete Job" class="btn btn-success" id="btnAdd" name="btnAdd" />
+    </div>
+
+
+}
+
+
+<script>
+    $(document).ready(function () {
+        $('#repair').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99
+        });
+        $('#partamount').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99
+        });
+        $('#material').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99
+        });
+        $('#addfreight').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99
+        });
+        $('#freight').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99
+        });
+        $('#travel').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99,
+        });
+        $('#excess').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99,
+        });
+
+    });
+
+</script>
+
+
+
+
+

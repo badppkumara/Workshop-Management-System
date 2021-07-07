@@ -1,0 +1,120 @@
+﻿@model IEnumerable<UILAB.Models.vw_JobTasksTR>
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "OrderList";
+    Layout = null;
+}
+
+<div class="col-md-12">
+    <div class="table-responsive">
+        <table id="myTable" class="table table-bordered table-striped table-nowrap dataTable" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>
+                        Task Name
+                    </th>
+                    <th>
+                        Start Date
+                    </th>
+                    <th>
+                        Finish Date
+                    </th>
+                    <th>
+                        Completed By
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Option
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TaskName)
+                        </td>
+                        <td>
+                            @if (Convert.ToDateTime(item.StartDate).ToString("yyyy-MM-dd") != "1900-01-01")
+                        {
+                                @Convert.ToDateTime(item.StartDate).ToString("dd-MM-yyyy")
+                        }
+                        else
+                        {
+                                <span style="color:firebrick">@Html.Encode("")</span>
+                        }
+                        </td>
+                        <td>
+                            @if (Convert.ToDateTime(item.FinishDate).ToString("yyyy-MM-dd") != "1900-01-01")
+                        {
+                                @Convert.ToDateTime(item.FinishDate).ToString("dd-MM-yyyy")
+                        }
+                        else
+                        {
+                                <span style="color:firebrick">@Html.Encode("")</span>
+                        }
+                        </td>
+                        <td>
+                            @{
+                                using (var db = new DatabaseContext())
+                                {
+                                    var user = db.EmployeeMasters.SingleOrDefault(b => b.EmployeeNo == item.CompletedBy && b.SegmentID == item.SegmentID);
+                                    if (user != null)
+                                    {
+                                        @Html.DisplayFor(modelItem => user.FirstName) @Html.DisplayFor(modelItem => user.LastName)
+                                    }
+                                }
+
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StatusName)
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                if (item.StatusID == 1 || item.StatusID == 3)
+                                {
+                                    <a href="#" class="btn btn-xs btn-outline-danger" onclick="DeleteData(@item.JobTaskTRID)">Delete </a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+@*hidden field for storing current Id*@
+<input type="hidden" id="hiddenId" />
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+
+    // ------------------- Delete Item -------------------
+    var DeleteData = function (ResultId) {
+        $("#hiddenId").val(ResultId);
+        $("#myModal").modal('show');
+    }
+
+    var Delete = function () {
+        var empId = $("#hiddenId").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/EmpJob/DeleteTask",
+            data: { Id: empId },
+            success: function (result) {
+                $("#myModal").modal("hide");
+                //window.location.replace("StartJob", "Job");
+            }
+        })
+    }
+    //--------------------------------------------------------
+</script>
+
+

@@ -1,0 +1,155 @@
+﻿@model UILAB.Models.UserSecurity
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+    <div class="layout-content-body">
+        <div class="title-bar">
+            <div class="title-bar-actions">
+                <a href="/Admin/Dashboard">Dashboard</a> | <a href="/Administrator/List">Administrators</a> | Update Administrator
+            </div>
+            <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Administrators</span></h5>
+        </div>
+        <div class="row gutter-xs">
+            <div class="col-xs-12">
+                <div class="card">
+                    <div class="card-header">
+                        @Html.ActionLink("Back to List", "List", null, new { @class = "btn btn-sm btn-success" })
+                    </div>
+                    <div class="card-body">
+                        <div class="col-md-8">
+                            @using (Html.BeginForm("Edit", "Administrator", FormMethod.Post, new { enctype = "multipart/form-data", @id = "EditFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+
+                                <div class="demo-form-wrapper">
+
+                                    <div class="form form-horizontal">
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                        @Html.HiddenFor(model => model.UserID)
+                                        @Html.HiddenFor(model => model.SegmentID)
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">User Name <span style="color: red">*</span></label>
+                                            <div class="col-sm-9">
+                                                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                                                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        @*<div class="form-group">
+                                            <label class="col-sm-3 control-label">Password <span style="color: red">*</span></label>
+                                            <div class="col-sm-9">
+                                                @Html.PasswordFor(model => model.Password, new { @class = "form-control", @maxlength = 30, autocomplete = "off" })
+                                                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>*@
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Employee </label>
+                                            <div class="col-sm-9">
+                                                @Html.DropDownListFor(model => model.EmployeeNo, ViewBag.EmployeeList as SelectList, "--- Select Employee ---", new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        @{
+                                            if (Model.UserID == Convert.ToInt32(TempData["user"]))
+                                            {
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label"></label>
+                                                    <div class="col-sm-9">
+                                                        <label class="custom-control custom-control-primary custom-checkbox">
+                                                            <input class="custom-control-input" type="checkbox" name="isactive" id="isactive" checked="checked" value="True" disabled="disabled">
+                                                            <span class="custom-control-indicator"></span>
+                                                            <span class="custom-control-label">Is Active</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                if (Model.IsActive == true)
+                                                {
+                                                    <div class="form-group">
+                                                        <label class="col-sm-3 control-label"></label>
+                                                        <div class="col-sm-9">
+                                                            <label class="custom-control custom-control-primary custom-checkbox">
+                                                                <input class="custom-control-input" type="checkbox" name="isactive" id="isactive" checked="checked" value="True">
+                                                                <span class="custom-control-indicator"></span>
+                                                                <span class="custom-control-label">Is Active</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="form-group">
+                                                        <label class="col-sm-3 control-label"></label>
+                                                        <div class="col-sm-9">
+                                                            <label class="custom-control custom-control-primary custom-checkbox">
+                                                                <input class="custom-control-input" type="checkbox" name="isactive" id="isactive" value="True">
+                                                                <span class="custom-control-indicator"></span>
+                                                                <span class="custom-control-label">Is Active</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        }
+
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label"></label>
+                                            <div class="col-sm-9">
+                                                <input type="submit" value="Update" class="btn btn-primary" id="btnSave" name="SaveEntry" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="errorMsg">
+                                            <div style="color:firebrick">@TempData["ErrorMessage"]</div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('#EditFormID').validate({
+                    errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+                    errorElement: 'div',
+                    errorPlacement: function (error, e) {
+                        e.parents('.form-group > div').append(error);
+                    },
+                    highlight: function (e) {
+
+                        $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                        $(e).closest('.help-block').remove();
+                    },
+                    success: function (e) {
+                        e.closest('.form-group').removeClass('has-success has-error');
+                        e.closest('.help-block').remove();
+                    },
+                    rules: {
+                        'UserName': {
+                            required: true,
+                        },
+                        'Password': {
+                            required: true,
+                        }
+                    },
+                    messages: {
+                        'UserName': 'This Field Required'
+                    },
+                    messages: {
+                        'Password': 'This Field Required'
+                    }
+                });
+            });
+        </script>

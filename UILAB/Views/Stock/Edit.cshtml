@@ -1,0 +1,300 @@
+﻿@model UILAB.Models.StockTR
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if('@TempData["ErrorMessage"]' != "")
+        {
+            $("#errorMsg").show();
+        }
+        else
+        {
+            $("#errorMsg").hide();
+        }
+    });
+</script>
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Admin/Dashboard">Dashboard</a> | <a href="~/Stock/List">Products</a> | Add Product
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Products</span></h5>
+    </div>
+    <div class="row gutter-xs">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    @Html.ActionLink("Back to List", "List", null, new { @class = "btn btn-sm btn-success" })
+                </div>
+                <div class="card-body">
+                    <div class="col-md-8">
+                        @using (Html.BeginForm("Edit", "Stock", FormMethod.Post, new { enctype = "multipart/form-data", @id = "EditFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+                            <div class="demo-form-wrapper">
+
+                                <div class="form form-horizontal" id="demo-inputmask">
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    @Html.HiddenFor(model => model.StockID)
+                                    @Html.HiddenFor(model => model.SegmentID)
+
+                                    <div class="form-group" id="errorMsg">
+                                        <label class="col-sm-3 control-label"></label>
+                                        <div class="col-sm-9">
+                                            <div class="alert alert-danger">
+                                                <span class="sidenav-icon icon icon-question-circle"></span> Product <strong>"@TempData["ErrorMessage"]"</strong> Exists...!
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Warehouse <span style="color: red">*</span></label>
+                                        <div class="col-sm-9">
+                                            @Html.DropDownListFor(model => model.WarehouseID, ViewBag.WarehouseList as SelectList, "--- Select Warehouse ---", new { @class = "form-control", @disabled = "disabled" })
+                                            @Html.ValidationMessageFor(model => model.WarehouseID, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Category <span style="color: red">*</span></label>
+                                        <div class="col-sm-9">
+                                            @Html.DropDownListFor(model => model.TypeID, ViewBag.TypeList as SelectList, "--- Select Category ---", new { @class = "form-control", @disabled = "disabled" })
+                                            @Html.ValidationMessageFor(model => model.TypeID, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Sub Category <span style="color: red">*</span></label>
+                                        <div class="col-sm-9">
+                                            @Html.DropDownListFor(model => model.SubTypeID, ViewBag.SubTypeList as SelectList, "--- Select Sub Category ---", new { @class = "form-control", @disabled = "disabled" })
+                                            @Html.ValidationMessageFor(model => model.SubTypeID, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Brand name <span style="color: red">*</span></label>
+                                        <div class="col-sm-9">
+                                            @Html.DropDownListFor(model => model.BrandID, ViewBag.BrandList as SelectList, "--- Select Brand ---", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.BrandID, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Code <span style="color: red">*</span></label>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.Code, new { htmlAttributes = new { placeholder = "Code", @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.PartNo, new { htmlAttributes = new { placeholder = "Part No", @class = "form-control" } })
+                                        </div>
+                                        <div class="col-sm-3">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Product <span style="color: red">*</span></label>
+                                        <div class="col-sm-9">
+                                            @Html.EditorFor(model => model.Product, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Product, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Description </label>
+                                        <div class="col-sm-9">
+                                            @Html.TextAreaFor(model => model.Description, 5, 40, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Qty <span style="color: red">*</span></label>
+                                        <div class="col-sm-9">
+                                            @Html.EditorFor(model => model.Qty, new { htmlAttributes = new { placeholder = "0", @class = "form-control", @id = "qty" } })
+                                            @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Unit Price <span style="color: red">*</span></label>
+                                        <div class="col-sm-9">
+                                            @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { placeholder = "0", @class = "form-control", @id = "unitprice" } })
+                                            @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Alert Qty When Less</label>
+                                        <div class="col-sm-9">
+                                            @Html.EditorFor(model => model.AlertQty, new { htmlAttributes = new { placeholder = "0", @class = "form-control", @id = "alertqty" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"></label>
+                                        <div class="col-sm-9">
+                                            <input type="file" accept="image/*" multiple="multiple" name="FileUpload" id="FileUpload">
+                                            <p class="help-block">
+                                                <small>
+                                                    Allowed File: .jpeg, .jpg, .png,
+                                                </small>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"></label>
+                                        <div class="col-sm-9">
+                                            <input type="submit" value="Update" class="btn btn-primary" id="btnSave" name="SaveEntry" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="errorMsg">
+                                        <div style="color:firebrick">@TempData["ErrorMessage"]</div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        $('#EditFormID').validate({
+            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+            errorElement: 'div',
+            errorPlacement: function (error, e) {
+                e.parents('.form-group > div').append(error);
+            },
+            highlight: function (e) {
+
+                $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                $(e).closest('.help-block').remove();
+            },
+            success: function (e) {
+                e.closest('.form-group').removeClass('has-success has-error');
+                e.closest('.help-block').remove();
+            },
+            rules: {
+                'WarehouseID': {
+                    required: true,
+                },
+                'TypeID': {
+                    required: true,
+                },
+                'SubTypeID': {
+                    required: true,
+                },
+                'Code': {
+                    required: true,
+                },
+                'Product': {
+                    required: true,
+                },
+                'Qty': {
+                    required: true,
+                },
+                'UnitPrice': {
+                    required: true,
+                },
+                'ProductBrandID': {
+                    required: true,
+                }
+
+            },
+            messages: {
+                'WarehouseID': 'This Field Required'
+            },
+            messages: {
+                'TypeID': 'This Field Required'
+            },
+            messages: {
+                'SubTypeID': 'This Field Required'
+            },
+            messages: {
+                'Code': 'This Field Required'
+            },
+            messages: {
+                'Product': 'This Field Required'
+            },
+            messages: {
+                'Qty': 'This Field Required'
+            },
+            messages: {
+                'UnitPrice': 'This Field Required'
+            },
+            messages: {
+                'ProductBrandID': 'This Field Required'
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $('#OrderDate').inputmask("datetime", {
+            mask: "1-2-y",
+            placeholder: "dd-mm-yyyy",
+            leapday: "-02-29",
+            separator: "-",
+            alias: "dd-mm-yyyy"
+        });
+
+        $('#qty').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99
+        });
+        $('#unitprice').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99,
+        });
+        $('#alertqty').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99,
+        });
+        $('#tax').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99,
+        });
+    });
+
+</script>
+
+<script>
+    function FillModel() {
+        var brandId = $('#TypeID').val();
+        $.ajax({
+            url: '/Stock/FillModel',
+            type: "GET",
+            dataType: "JSON",
+            data: { Brand: brandId },
+            success: function (vehmodels) {
+                $("#SubTypeID").html(""); // clear before appending new list
+                $.each(vehmodels, function (i, city) {
+                    $("#SubTypeID").append(
+                        $('<option></option>').val(city.SubTypeID).html(city.SubTypeName));
+                });
+            }
+        });
+    }
+</script>
+
+

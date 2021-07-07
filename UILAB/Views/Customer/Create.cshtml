@@ -1,0 +1,225 @@
+﻿@model UILAB.Models.CustomerTB
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        if('@TempData["ErrorMessage"]' != "")
+        {
+            $("#errorMsg").show();
+        }
+        else
+        {
+            $("#errorMsg").hide();
+        }
+    });
+</script>
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Admin/Dashboard">Dashboard</a> | <a href="~/Customer/List">Customers</a> | Add Customer
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Customers</span></h5>
+    </div>
+    <div class="row gutter-xs">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    @Html.ActionLink("Back to List", "List", null, new { @class = "btn btn-sm btn-success" })
+                </div>
+                <div class="card-body">
+                    <div class="col-md-8">
+
+                        @using (Html.BeginForm("Create", "Customer", FormMethod.Post, new { enctype = "multipart/form-data", @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+                            <div class="demo-form-wrapper">
+
+                                <div class="form form-horizontal">
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    @Html.HiddenFor(model => model.CustomerID)
+                                    @Html.HiddenFor(model => model.SegmentID)
+
+                                    <div class="form-group" id="errorMsg">
+                                        <label class="col-sm-3 control-label"></label>
+                                        <div class="col-sm-9">
+                                            <div class="alert alert-danger">
+                                                <span class="sidenav-icon icon icon-question-circle"></span> <strong>"@TempData["ErrorMessage"]"</strong> 
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Company </label>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.Company, new { htmlAttributes = new { placeholder = "Company", @class = "form-control" } })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.BuisnessNo, new { htmlAttributes = new { placeholder = "Business No", @class = "form-control" } })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.GSTNo, null ?? "", new { htmlAttributes = new { placeholder = "GST No", @class = "form-control" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Full Name <span style="color: red">*</span></label>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { placeholder = "First Name", @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.MiddleName, new { htmlAttributes = new { placeholder = "Middle Name", @class = "form-control" } })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { placeholder = "Last Name", @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Other Names </label>
+                                        <div class="col-sm-9">
+                                            @Html.EditorFor(model => model.OtherName, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Driving Licence No </label>
+                                        <div class="col-sm-9">
+                                            @Html.EditorFor(model => model.DrivingLicenceNo, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Gender </label>
+                                        <div class="col-sm-9">
+                                            @Html.DropDownListFor(model => model.GenderID, ViewBag.GenderList as SelectList, "--- Select Gender ---", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Address</label>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.Address1, new { htmlAttributes = new { placeholder = "No.", @class = "form-control" } })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.Address2, new { htmlAttributes = new { placeholder = "Street", @class = "form-control" } })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.Address3, new { htmlAttributes = new { placeholder = "City", @class = "form-control" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"></label>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.PostalNo, new { htmlAttributes = new { placeholder = "Postal No", @class = "form-control" } })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.DropDownListFor(model => model.CountryID, ViewBag.CountryList as SelectList, "--- Select Country ---", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Email <span style="color: red">*</span></label>
+                                        <div class="col-sm-9">
+                                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Contact No. <span style="color: red">*</span></label>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.Mobile, new { htmlAttributes = new { placeholder = "Mobile", @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Mobile, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { placeholder = "Phone", @class = "form-control" } })
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @Html.EditorFor(model => model.Fax, new { htmlAttributes = new { placeholder = "Fax", @class = "form-control" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">User Name </label>
+                                        <div class="col-sm-9">
+                                            @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"></label>
+                                        <div class="col-sm-9">
+                                            <label class="custom-control custom-control-primary custom-checkbox">
+                                                <input class="custom-control-input" type="checkbox" name="iscontract" id="iscontract" value="True">
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-label">Is Contract</span>
+                                            </label>
+                                            <label class="custom-control custom-control-primary custom-checkbox">
+                                                <input class="custom-control-input" type="checkbox" name="isactive" id="isactive" checked="checked" value="True">
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-label">Is Active</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"></label>
+                                        <div class="col-sm-9">
+                                            <input type="submit" value="Save" class="btn btn-primary" id="btnSave" name="SaveEntry" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+        $(document).ready(function () {
+            $('#CreateFormID').validate({
+                errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+                errorElement: 'div',
+                errorPlacement: function (error, e) {
+                    e.parents('.form-group > div').append(error);
+                },
+                highlight: function (e) {
+
+                    $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                    $(e).closest('.help-block').remove();
+                },
+                success: function (e) {
+                    e.closest('.form-group').removeClass('has-success has-error');
+                    e.closest('.help-block').remove();
+                },
+                rules: {
+                    'FirstName': {
+                        required: true,
+                    },
+                    'LastName': {
+                        required: true,
+                    },
+                    'Mobile': {
+                        required: true,
+                    }
+                },
+                messages: {
+                    'FirstName': 'This Field Required'
+                },
+                messages: {
+                    'LastName': 'This Field Required'
+                },
+                messages: {
+                    'Mobile': 'This Field Required'
+                }
+            });
+        });
+</script>

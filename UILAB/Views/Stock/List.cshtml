@@ -1,0 +1,186 @@
+﻿@model IEnumerable<UILAB.Models.vw_StockTR>
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["Error"]' != "") {
+            $("#errorMsg").show();
+        }
+        else {
+            $("#errorMsg").hide();
+        }
+    });
+
+    var flag = "@TempData["Success"]";
+    var flag2 = "@TempData["Deleted"]";
+    var flag3 = "@TempData["Updated"]";
+
+    if (flag == "Success") {
+        toastr.success('Success!... Item Created')
+    }
+
+    if (flag2 == "Deleted") {
+        toastr.error('Success!... Item Deleted')
+    }
+
+    if (flag3 == "Updated") {
+        toastr.success('Success!... Item Updated')
+    }
+
+</script>
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Admin/Dashboard">Dashboard</a> | Products
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Products</span></h5>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    @Html.ActionLink("Add Product", "Create", null, new { @class = "btn btn-sm btn-success" })
+                    @Html.ActionLink("Add Multiple Product", "CreateBulk", null, new { @class = "btn btn-sm btn-success" })
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger" id="errorMsg">
+                        <strong>Error!</strong> @TempData["Error"]
+                    </div>
+                    <div class="table-responsive">
+                        <table id="myTable" class="table table-bordered table-striped table-nowrap dataTable" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center">
+                                        Code / Part No
+                                    </th>
+                                    <th style="text-align:center">
+                                        Brand Name
+                                    </th>
+                                    <th style="text-align:center">
+                                        Product
+                                    </th>
+                                    <th style="text-align:center">
+                                        Category Type / Sub type
+                                    </th>
+                                    <th style="text-align:center">
+                                        Qty
+                                    </th>
+                                    <th style="text-align:center">
+                                        Unit Price NZD
+                                    </th>
+
+                                    <th style="text-align:center">Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td style="font-size: small">
+                                            @Html.DisplayFor(modelItem => item.Code) / @Html.DisplayFor(modelItem => item.PartNo)
+                                        </td>
+                                        <td style="font-size: small">
+                                            @Html.DisplayFor(modelItem => item.Brand)
+                                        </td>
+                                        <td style="font-size: small">
+                                            @Html.DisplayFor(modelItem => item.Product)
+                                        </td>
+                                        <td style="font-size: small">
+                                            @Html.DisplayFor(modelItem => item.TypeName) / @Html.DisplayFor(modelItem => item.SubTypeName)
+                                        </td>
+                                        <td style="font-size: small; text-align:center">
+                                            @{
+                                                if (item.Qty <= item.AlertQty)
+                                                {
+                                                    <span class="badge badge-danger">
+                                                        @Html.DisplayFor(modelItem => item.Qty)
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.Qty)
+                                                }
+                                            }
+                                        </td>
+                                        <td style="font-size: small; text-align:right">
+                                            @Html.DisplayFor(modelItem => item.UnitPrice)
+                                        </td>
+                                        <td style="text-align:right">
+                                            @*@Html.ActionLink("Details", "Details", new { id = item.Vehicle }, new { @class = "btn btn-xs btn-info" })*@
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.StockID }, new { @class = "btn btn-xs btn-default" })
+                                            @{
+                                                if (item.Flagged == true)
+                                                {
+                                                    <span class="hidden"><a href="#" class="btn btn-xs btn-danger" onclick="ConfirmDelete(@item.StockID)">Delete </a></span>
+                                                }
+                                                else
+                                                {
+                                                    <a href="#" class="btn btn-xs btn-danger" onclick="ConfirmDelete(@item.StockID)">Delete </a>
+                                                }
+                                            }
+                                        </td>
+
+                                    </tr>
+                                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to delete one track, this procedure is irreversible.</p>
+                <p>Do you want to proceed?</p>
+                <p class="debug-url"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger" data-dismiss="modal" type="button" onclick="Delete()">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*hidden field for storing current Id*@
+<input type="hidden" id="hiddenId" />
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+
+    // ------------------- Delete Item -------------------
+    var DeleteData = function (ResultId) {
+        $("#hiddenId").val(ResultId);
+        $("#myModal").modal('show');
+    }
+
+    var Delete = function () {
+        var empId = $("#hiddenId").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/Stock/Delete",
+            data: { Id: empId },
+            success: function (result) {
+                $("#myModal").modal("hide");
+                window.location.replace("List", "Stock");
+            }
+        })
+    }
+    //--------------------------------------------------------
+</script>

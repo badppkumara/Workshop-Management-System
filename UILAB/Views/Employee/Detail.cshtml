@@ -1,0 +1,40 @@
+﻿@model UILAB.Models.vw_EmployeeMaster
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+    <div class="layout-content-body">
+        <div class="title-bar">
+            <div class="title-bar-actions">
+                <a href="/Admin/Dashboard">Dashboard</a> | @Html.ActionLink("Employees", "List", "Employee") | @TempData["username"]
+            </div>
+            <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">@TempData["fullname"]</span></h5>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        @Html.ActionLink("Back to List", "List", null, new { @class = "btn btn-sm btn-success" })
+                    </div>
+                    <div class="card-body">
+
+                        <!-- tabs left -->
+                        <div class="tabbable tabs-left">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#a" data-toggle="tab">Profile</a></li>
+                                <li><a href="#b" data-toggle="tab">Security</a></li>
+                                <li><a href="#c" data-toggle="tab">Log</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="a">@Html.Action("EmployeeInfo")</div>
+                                <div class="tab-pane" id="b">@Html.Action("Security")</div>
+                                <div class="tab-pane" id="c">@Html.Action("Logs")</div>
+                            </div>
+                        </div>
+                        <!-- /tabs -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>

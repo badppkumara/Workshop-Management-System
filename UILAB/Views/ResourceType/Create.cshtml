@@ -1,0 +1,102 @@
+﻿@model UILAB.Models.ResourceType
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["errorMessage"]' != "") {
+            $("#ErrorMsg").show();
+        }
+        else {
+            $("#ErrorMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["successMsg"]' != "") {
+            $("#SuccessMsg").show();
+            $('#SuccessMsg').delay(4000).hide(0);
+        }
+        else {
+            $("#SuccessMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["buttonMsg"]' != "") {
+            $("#ButtonMsg").show();
+        }
+        else {
+            $("#ButtonMsg").hide();
+        }
+    });
+</script>
+
+@using (Html.BeginForm("Create", "ResourceType", FormMethod.Post, new { enctype = "multipart/form-data", @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+    <div class="demo-form-wrapper">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.TypeID)
+        <h4>@ViewBag.SubmitHeader Category</h4>
+        <hr style="margin-top:5px" />
+
+        <div class="form-group form-group-sm">
+            <label>Category Type <span style="color: red">*</span></label>
+            <div>
+                @Html.EditorFor(model => model.TypeName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TypeName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group" id="ErrorMsg" hidden="hidden">
+            <div class="alert alert-danger">
+                <span class="sidenav-icon icon icon-question-circle"></span> Category <strong>"@TempData["errorMessage"]"</strong> Exists...!
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            <input type="submit" class="btn btn-primary" id="btnSave" name="SaveEntry" value="@ViewBag.SubmitValue" />
+            <a href="~/ResourceType/List" class="btn btn-warning" id="ButtonMsg">Clear </a>
+        </div>
+
+        <div class="form-group" id="SuccessMsg" hidden="hidden">
+            <div class="alert alert-success">
+                <span class="sidenav-icon icon icon-thumbs-up"></span> Category @TempData["successMsg"]
+            </div>
+        </div>
+
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#CreateFormID').validate({
+            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+            errorElement: 'div',
+            errorPlacement: function (error, e) {
+                e.parents('.form-group > div').append(error);
+            },
+            highlight: function (e) {
+
+                $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                $(e).closest('.help-block').remove();
+            },
+            success: function (e) {
+                e.closest('.form-group').removeClass('has-success has-error');
+                e.closest('.help-block').remove();
+            },
+            rules: {
+                'TypeName': {
+                    required: true,
+                }
+            },
+            messages: {
+                'TypeName': 'This Field Required'
+            }
+        });
+    });
+</script>

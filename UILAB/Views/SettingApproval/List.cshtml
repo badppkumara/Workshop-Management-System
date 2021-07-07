@@ -1,0 +1,85 @@
+﻿
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<script>
+
+</script>
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Admin/Dashboard">Dashboard</a> | Approval Settings
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Approval Settings</span></h5>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <!-- tabs left -->
+                    <div class="tabbable tabs">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#a" data-toggle="tab">Schemes</a></li>
+                            <li><a href="#b" data-toggle="tab">Groups</a></li>
+                            <li><a href="#c" data-toggle="tab">Assign</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="a">@Html.Action("SchemeInfo")</div>
+                            <div class="tab-pane" id="b">@Html.Action("Groups")</div>
+                            <div class="tab-pane" id="c">@Html.Action("Assign")</div>
+                        </div>
+                    </div>
+                    <!-- /tabs -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to delete one track, this procedure is irreversible.</p>
+                <p>Do you want to proceed?</p>
+                <p class="debug-url"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger" data-dismiss="modal" type="button" onclick="Delete()">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalGroup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to delete one track, this procedure is irreversible.</p>
+                <p>Do you want to proceed?</p>
+                <p class="debug-url"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger" data-dismiss="modal" type="button" onclick="Delete()">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>

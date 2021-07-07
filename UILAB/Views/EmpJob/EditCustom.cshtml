@@ -1,0 +1,382 @@
+﻿@model UILAB.Models.JobTR
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "EditCustom";
+    Layout = "~/Views/Shared/_LayoutEmp.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["ErrorMessage"]' != "") {
+            $("#errorMsg").show();
+        }
+        else {
+            $("#errorMsg").hide();
+        }
+    });
+</script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#DataTable').DataTable();
+        $('#checkBoxAll').click(function () {
+            if ($(this).is(":checked")) {
+                $(".chkCheckBoxId").prop("checked", true)
+            }
+            else {
+                $(".chkCheckBoxId").prop("checked", false)
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $('#DataTable2').DataTable();
+        $('#checkBoxAll2').click(function () {
+            if ($(this).is(":checked")) {
+                $(".chkCheckBoxId2").prop("checked", true)
+            }
+            else {
+                $(".chkCheckBoxId2").prop("checked", false)
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $('#DataTable3').DataTable();
+        $('#checkBoxAll3').click(function () {
+            if ($(this).is(":checked")) {
+                $(".chkCheckBoxId3").prop("checked", true)
+            }
+            else {
+                $(".chkCheckBoxId3").prop("checked", false)
+            }
+        });
+    });
+
+</script>
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Emp/Dashboard">Dashboard</a> | <a href="~/EmpJob/List">Jobs</a> | Update Job
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Jobs</span></h5>
+    </div>
+    <div class="row gutter-xs">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    @Html.ActionLink("Back to List", "List", null, new { @class = "btn btn-sm btn-success" })
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("EditCustom", "EmpJob", FormMethod.Post, new { enctype = "multipart/form-data", @id = "EditFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <div class="demo-form-wrapper">
+                                    <div class="form form-horizontal" id="demo-inputmask">
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                        @Html.HiddenFor(model => model.JobID)
+                                        @Html.HiddenFor(model => model.SegmentID)
+
+                                        <div class="form-group" id="errorMsg">
+                                            <label class="col-sm-3 control-label"></label>
+                                            <div class="col-sm-9">
+                                                <div class="alert alert-danger">
+                                                    <span class="sidenav-icon icon icon-question-circle"></span> <strong>"@TempData["ErrorMessage"]"</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Vehicle <span style="color: red">*</span></label>
+                                            <div class="col-sm-9">
+                                                @Html.DropDownListFor(model => model.VehicleID, ViewBag.VehicleList as SelectList, "--- Select Vehicle ---", new { @class = "form-control  text-uppercase" })
+                                                @Html.ValidationMessageFor(model => model.VehicleID, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Current Mileages </label>
+                                            <div class="col-sm-3">
+                                                <input type="text" id="mileage" placeholder="Mileage" name="mileage" class="form-control"
+                                                       data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" value="@TempData["mileage"]" />
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <input type="text" id="hubo" placeholder="Hubo" name="hubo" class="form-control"
+                                                       data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" value="@TempData["hubo"]" />
+                                            </div>
+                                            <div class="col-sm-3">
+
+                                                <input type="text" id="ruc" placeholder="RUC" name="ruc" class="form-control"
+                                                       data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" value="@TempData["ruc"]" />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Registrations</label>
+                                            <div class="col-sm-3" style="z-index: 99999 !important">
+                                                <div class="input-with-icon">
+                                                    <input id="regodate" name="regodate" class="form-control" type="text" data-provide="datepicker" data-date-autoclose="true" data-date-format="dd-MM-yyyy"
+                                                           data-date-today-highlight="true" placeholder="Rego Expiry Date" autocomplete="off" value="@TempData["regodate"]">
+                                                    <span class="icon icon-calendar input-icon"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3" style="z-index: 99999 !important">
+                                                <div class="input-with-icon">
+                                                    <input id="wofdate" name="wofdate" class="form-control" type="text" data-provide="datepicker" data-date-autoclose="true" data-date-format="dd-MM-yyyy"
+                                                           data-date-today-highlight="true" placeholder="WOF Expiry Date" autocomplete="off" value="@TempData["wofdate"]">
+                                                    <span class="icon icon-calendar input-icon"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Job Start Date </label>
+                                            <div class="col-sm-9" style="z-index: 99999 !important">
+                                                <div class="input-with-icon">
+                                                    <input id="startdate" name="startdate" class="form-control" type="text" data-date-autoclose="true" data-date-format="dd-MM-yyyy"
+                                                           data-provide="datepicker" data-date-today-highlight="true" autocomplete="off" value="@TempData["startdate"]">
+                                                    <span class="icon icon-calendar input-icon"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Job Finish Date </label>
+                                            <div class="col-sm-9" style="z-index: 99999 !important">
+                                                <div class="input-with-icon">
+                                                    <input id="finishdate" name="finishdate" class="form-control" type="text" data-date-autoclose="true" data-date-format="dd-MM-yyyy"
+                                                           data-provide="datepicker" data-date-today-highlight="true" autocomplete="off" value="@TempData["finishdate"]">
+                                                    <span class="icon icon-calendar input-icon"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Description </label>
+                                            <div class="col-sm-9">
+                                                @Html.TextAreaFor(model => model.Remark, 5, 40, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Vehicle Images</label>
+                                            <div class="col-sm-9">
+                                                <input type="file" accept="image/*" multiple="multiple" name="FileUpload" id="FileUpload">
+                                                <p class="help-block">
+                                                    <small>
+                                                        Allowed File: .jpeg, .jpg, .png,
+                                                    </small>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label"></label>
+                                            <div class="col-sm-9">
+                                                <input type="submit" value="Update" class="btn btn-primary" id="btnSave" name="SaveEntry" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+
+                                <!-- tabs left -->
+                                <div class="tabbable tabs">
+                                    <ul class="nav nav-tabs">
+                                        <li class="active"><a href="#a" data-toggle="tab">Assign Job Task</a></li>
+                                        <li><a href="#b" data-toggle="tab">Assign Employee</a></li>
+                                        <li><a href="#c" data-toggle="tab">Assign Part Types</a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="a">
+                                            <div class="table-responsive" style="margin-top:10px; overflow:300px">
+                                                <table id="DataTable" style="width:100%;" class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th><input type="checkbox" id="checkBoxAll" class="custom-checkbox" /></th>
+                                                            <th>Job Tasks</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @{
+                                                            using (var db = new DatabaseContext())
+                                                            {
+                                                                var task = (from data in db.JobTasksTBs orderby data.TaskName ascending select data).ToList();
+
+                                                                foreach (var taskitem in task)
+                                                                {
+                                                                    var taskset = db.JobTaskTRs.SingleOrDefault(b => b.JobTaskID == taskitem.TaskID && b.JobID == Model.JobID);
+                                                                    if (taskset != null)
+                                                                    {
+                                                                        <tr>
+                                                                            <td><input type="checkbox" name="ID" value="@taskitem.TaskID" class="custom-checkbox chkCheckBoxId" checked="checked" /></td>
+                                                                            <td>@taskitem.TaskName</td>
+                                                                        </tr>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <tr>
+                                                                            <td><input type="checkbox" name="ID" value="@taskitem.TaskID" class="custom-checkbox chkCheckBoxId" /></td>
+                                                                            <td>@taskitem.TaskName</td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="b">
+                                            @*<div class="table-responsive" style="margin-top:10px; overflow:300px">
+                                                <table id="DataTable2" style="width:100%;" class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th><input type="checkbox" id="checkBoxAll2" class="custom-checkbox" /></th>
+                                                            <th>Employee</th>
+                                                            <th>Designation</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @{
+                                                            using (var db = new DatabaseContext())
+                                                            {
+                                                                var user = (from data in db.vw_EmployeeMasters orderby data.FullName ascending select data).ToList();
+
+                                                                foreach (var useritem in user)
+                                                                {
+                                                                    var userasign = db.JobAssignEmpTRs.SingleOrDefault(b => b.EmployeeNo == useritem.EmployeeNo && b.JobID == Model.JobID);
+                                                                    if (userasign != null)
+                                                                    {
+                                                                        <tr>
+                                                                            <td><input type="checkbox" name="IDEmployee" value="@useritem.EmployeeNo" class="custom-checkbox chkCheckBoxId2" checked="checked" /></td>
+                                                                            <td>@useritem.FullName</td>
+                                                                            <td>@useritem.DesignationName</td>
+                                                                        </tr>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <tr>
+                                                                            <td><input type="checkbox" name="IDEmployee" value="@useritem.EmployeeNo" class="custom-checkbox chkCheckBoxId2" /></td>
+                                                                            <td>@useritem.FullName</td>
+                                                                            <td>@useritem.DesignationName</td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>*@
+                                        </div>
+                                        <div class="tab-pane" id="c">
+                                            <div class="table-responsive" style="margin-top:10px; overflow:300px">
+                                                <table id="DataTable3" style="width:100%;" class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th><input type="checkbox" id="checkBoxAll3" class="custom-checkbox" /></th>
+                                                            <th>Types</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @{
+                                                            using (var db = new DatabaseContext())
+                                                            {
+                                                                var type = (from data in db.StockTypes orderby data.TypeName ascending select data).ToList();
+
+                                                                foreach (var typeitem in type)
+                                                                {
+                                                                    <tr>
+                                                                        <td><input type="checkbox" name="IDPart" value="@typeitem.TypeID" class="custom-checkbox chkCheckBoxId3" /></td>
+                                                                        <td>@typeitem.TypeName</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        }
+
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- /tabs -->
+                            </div>
+                        </div>
+                                                            }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#DataTable').DataTable();
+    });
+
+    $(document).ready(function () {
+        $('#DataTable2').DataTable();
+    });
+
+    $(document).ready(function () {
+        $('#DataTable3').DataTable();
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#CreateFormID').validate({
+            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+            errorElement: 'div',
+            errorPlacement: function (error, e) {
+                e.parents('.form-group > div').append(error);
+            },
+            highlight: function (e) {
+
+                $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                $(e).closest('.help-block').remove();
+            },
+            success: function (e) {
+                e.closest('.form-group').removeClass('has-success has-error');
+                e.closest('.help-block').remove();
+            },
+            rules: {
+                'VehicleID': {
+                    required: true,
+                }
+            },
+            messages: {
+                'VehicleID': 'This Field Required'
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $('#mileage').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99
+        });
+        $('#hubo').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99,
+        });
+        $('#ruc').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99,
+        });
+
+    });
+
+</script>

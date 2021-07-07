@@ -1,0 +1,239 @@
+﻿@model IEnumerable<UILAB.Models.StockPurchaseOrderTR>
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<script type="text/javascript">
+
+    var flag = "@TempData["Success"]";
+    var flag2 = "@TempData["Deleted"]";
+    var flag3 = "@TempData["Updated"]";
+
+    if (flag == "Success") {
+        toastr.success('Success!... Item Created')
+    }
+
+    if (flag2 == "Deleted") {
+        toastr.error('Success!... Item Deleted')
+    }
+
+    if (flag3 == "Updated") {
+        toastr.success('Success!... Item Updated')
+    }
+
+</script>
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Admin/Dashboard">Dashboard</a> | Purchase Orders
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Purchase Orders</span></h5>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    @Html.ActionLink("Add Purchase Order", "Create", null, new { @class = "btn btn-sm btn-success" })
+                </div>
+                <div class="card-body">
+                   
+                        <div class="table-responsive">
+                            <table id="myTable" class="table table-bordered table-striped table-nowrap dataTable" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+
+                                        <th>
+                                            PO No.
+                                        </th>
+                                        <th>
+                                            Warehouse
+                                        </th>
+                                        <th>
+                                            Supplier
+                                        </th>
+                                        <th>
+                                            Purchase Date
+                                        </th>
+                                        <th>
+                                            Refferance
+                                        </th>
+                                        <th>
+                                            Status
+                                        </th>
+                                        
+                                        <th>
+                                            Total Items
+                                        </th>
+                                        <th style="text-align:center">Options</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PONO)
+                                        </td>
+                                        <td>
+                                            @{
+                                                using (var db = new DatabaseContext())
+                                                {
+                                                    var warehouse = db.StockWarehouses.SingleOrDefault(b => b.WarehouseID == item.WarehouseID);
+                                                    if (warehouse != null)
+                                                    {
+                                        @Html.DisplayFor(modelItem => warehouse.Warehouse)
+                                                    }
+                                                    else
+                                                    {
+
+                                                    }
+                                                }
+                                            }
+
+                                        </td>
+                                        <td>
+                                            @{
+                                                using (var db = new DatabaseContext())
+                                                {
+                                                    var supplier = db.Suppliers.SingleOrDefault(b => b.SupplierID == item.SupplierID);
+                                                    if (supplier != null)
+                                                    {
+                                        @Html.DisplayFor(modelItem => supplier.Company)
+                                                    }
+                                                    else
+                                                    {
+
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                        <td>
+                                            @Convert.ToDateTime(item.PODate).ToString("dd-MM-yyyy")
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Referance)
+                                        </td>
+                                        <td>
+                                            @{
+                                                using (var db = new DatabaseContext())
+                                                {
+                                                    var status = db.StockStatusMasters.SingleOrDefault(b => b.StatusID == item.StatusID);
+                                                    if (status != null)
+                                                    {
+                                        @Html.DisplayFor(modelItem => status.StatusName)
+                                                    }
+                                                    else
+                                                    {
+                                        <span style="color:firebrick">@Html.Encode("Not Assigned")</span>
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                        <td>
+                                            @{
+                                                if (item.Items == -1)
+                                                {
+                                        <span style="color:firebrick">@Html.Encode("0")</span>
+                                                }
+                                                else
+                                                {
+                                        @Html.DisplayFor(modelItem => item.Items)
+                                                }
+                                            }
+                                        </td>
+                                        <td style="text-align:right">
+                                            @{
+                                                if (item.POStatus == "Pending")
+                                                {
+                                        @Html.ActionLink("Create List", "CreateOrder", new { id = item.POID }, new { @class = "btn btn-xs btn-warning" })
+                                                }
+                                                if (item.POStatus == "Draft")
+                                                {
+                                        @Html.ActionLink("Update List", "CreateOrder", new { id = item.POID }, new { @class = "btn btn-xs btn-warning" })
+                                                }
+                                                if (item.POStatus == "Completed")
+                                                {
+                                        @Html.ActionLink("View List", "Details", new { id = item.POID }, new { @class = "btn btn-xs btn-info" })
+                                                }
+
+                                            }
+
+
+                                            @Html.ActionLink("Edit", "List", new { id = item.POID }, new { @class = "btn btn-xs btn-default" })
+                                            @{
+                                                if (item.Flagged == true)
+                                                {
+                                        <span class="hidden"><a href="#" class="btn btn-xs btn-danger" onclick="ConfirmDelete(@item.POID)">Delete </a></span>
+                                                }
+                                                else
+                                                {
+                                        <a href="#" class="btn btn-xs btn-danger" onclick="ConfirmDelete(@item.POID)">Delete </a>
+                                                }
+                                            }
+                                        </td>
+                                    </tr>
+                                                }
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to delete one track, this procedure is irreversible.</p>
+                <p>Do you want to proceed?</p>
+                <p class="debug-url"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger" data-dismiss="modal" type="button" onclick="Delete()">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*hidden field for storing current Id*@
+<input type="hidden" id="hiddenId" />
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+
+    // ------------------- Delete Item -------------------
+    var DeleteData = function (ResultId) {
+        $("#hiddenId").val(ResultId);
+        $("#myModal").modal('show');
+    }
+
+    var Delete = function () {
+        var empId = $("#hiddenId").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/StockPO/Delete",
+            data: { Id: empId },
+            success: function (result) {
+                $("#myModal").modal("hide");
+                window.location.replace("List", "StockPO");
+            }
+        })
+    }
+    //--------------------------------------------------------
+</script>
+

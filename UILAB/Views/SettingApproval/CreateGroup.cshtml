@@ -1,0 +1,192 @@
+﻿@model UILAB.Models.ApprovalGroupTR
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "CreateGroup";
+    Layout = null;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["errorMessage"]' != "") {
+            $("#ErrorMsg").show();
+        }
+        else {
+            $("#ErrorMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["successMsg"]' != "") {
+            $("#SuccessMsg").show();
+            $('#SuccessMsg').delay(4000).hide(0);
+        }
+        else {
+            $("#SuccessMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["buttonMsg"]' != "") {
+            $("#ButtonMsg").show();
+        }
+        else {
+            $("#ButtonMsg").hide();
+        }
+    });
+
+    function Search_Gridview(strKey) {
+        var strData = strKey.value.toLowerCase().split(" ");
+        var tblData = document.getElementById("DataTable2");
+        var rowData;
+        for (var i = 1; i < tblData.rows.length; i++) {
+            rowData = tblData.rows[i].innerHTML;
+            var styleDisplay = 'none';
+            for (var j = 0; j < strData.length; j++) {
+                if (rowData.toLowerCase().indexOf(strData[j]) >= 0)
+                    styleDisplay = '';
+                else {
+                    styleDisplay = 'none';
+                    break;
+                }
+            }
+            tblData.rows[i].style.display = styleDisplay;
+        }
+    }
+
+    $(document).ready(function () {
+        $('#DataTable2');
+        $('#checkBoxAll').click(function () {
+            if ($(this).is(":checked")) {
+                $(".chkCheckBoxId").prop("checked", true)
+            }
+            else {
+                $(".chkCheckBoxId").prop("checked", false)
+            }
+        });
+    });
+</script>
+
+@using (Html.BeginForm("CreateGroup", "SettingApproval", FormMethod.Post, new { enctype = "multipart/form-data", @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+
+    <div class="demo-form-wrapper">
+        <h4>@ViewBag.SubmitHeader</h4>
+        <hr style="margin-top:5px" />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ApprovalGroupID)
+
+        <div class="form-group form-group-sm">
+            <label>Group Name <span style="color: red">*</span></label>
+            <div>
+                @Html.EditorFor(model => model.GroupName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.GroupName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            <label>Approval Scheme <span style="color: red">*</span></label>
+            <div>
+                @Html.DropDownListFor(model => model.ApprovalSchemeID, ViewBag.SchemeList as SelectList, "--- Select Scheme ---", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ApprovalSchemeID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <div class="form-group form-group-sm">
+            <label>Select Employees <span style="color: red">*</span></label>
+            <div style="padding-top:5px">
+                <input type="text" class="form-control" onkeyup="Search_Gridview(this)" placeholder="Search" />
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <div class="table-responsive" style="margin-top:10px; overflow:auto; height:200px">
+                <table id="DataTable2" style="width:100%;" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="checkBoxAll" class="custom-checkbox" /></th>
+                            <th>Employee</th>
+                            <th>Order Number</th>
+                            <th>Final Approver</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            using (var db = new DatabaseContext())
+                            {
+                                var user = (from data in db.vw_EmployeeMasters orderby data.FullName ascending select data).ToList();
+
+                                foreach (var users in user)
+                                {
+                                    <tr>
+                                        <td><input type="checkbox" name="ID" value="@users.EmployeeNo" class="chkCheckBoxId" /></td>
+                                        <td>@users.FullName</td>
+                                        <td><input type="text" id="textorder" class="form-control" name="NumberID"/></td>
+                                        <td><input type="checkbox" id="checkBoxFinal" class="custom-checkbox" name="IDFinal" /></td>
+                                    </tr>
+                                }
+                            }
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+            </div>
+
+
+            <div class="form-group" id="ErrorMsg" hidden="hidden">
+                <div class="alert alert-danger">
+                    <span class="sidenav-icon icon icon-question-circle"></span> Group Name <strong>"@TempData["errorMessage"]"</strong> Exists...!
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <input type="submit" class="btn btn-primary" id="btnSave" name="SaveEntry" value="@ViewBag.SubmitValue" />
+                <a href="~/SettingApproval/List" class="btn btn-warning" id="ButtonMsg">Clear </a>
+            </div>
+
+            <div class="form-group" id="SuccessMsg" hidden="hidden">
+                <div class="alert alert-success">
+                    <span class="sidenav-icon icon icon-thumbs-up"></span> @TempData["successMsg"]
+                </div>
+            </div>
+        </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#CreateFormID').validate({
+            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+            errorElement: 'div',
+            errorPlacement: function (error, e) {
+                e.parents('.form-group > div').append(error);
+            },
+            highlight: function (e) {
+
+                $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                $(e).closest('.help-block').remove();
+            },
+            success: function (e) {
+                e.closest('.form-group').removeClass('has-success has-error');
+                e.closest('.help-block').remove();
+            },
+            rules: {
+                'GroupName': {
+                    required: true,
+                },
+                'Code': {
+                    required: true,
+                }
+            },
+            messages: {
+                'ApprovalSchemeID': 'This Field Required'
+            },
+            messages: {
+                'ApprovalSchemeID': 'This Field Required'
+            }
+        });
+    });
+</script>
+

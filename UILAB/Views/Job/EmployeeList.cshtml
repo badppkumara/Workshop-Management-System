@@ -1,0 +1,44 @@
+﻿@model IEnumerable<UILAB.Models.vw_JobAssignEmpTR>
+@{
+    ViewBag.Title = "EmployeeList";
+    Layout = null;
+}
+<div class="card-body">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table id="myTable" class="table table-bordered table-striped table-nowrap dataTable" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>
+                            Employee
+                        </th>
+                        <th>
+                            Designation
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FullName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DesignationName)
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+
+    </script>
+

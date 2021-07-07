@@ -1,0 +1,167 @@
+﻿@model IEnumerable<UILAB.Models.vw_ResourceTR>
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["Error"]' != "") {
+            $("#errorMsg").show();
+        }
+        else {
+            $("#errorMsg").hide();
+        }
+    });
+
+    var flag = "@TempData["Success"]";
+    var flag2 = "@TempData["Deleted"]";
+    var flag3 = "@TempData["Updated"]";
+
+    if (flag == "Success") {
+        toastr.success('Success!... Item Created')
+    }
+
+    if (flag2 == "Deleted") {
+        toastr.error('Success!... Item Deleted')
+    }
+
+    if (flag3 == "Updated") {
+        toastr.success('Success!... Item Updated')
+    }
+
+</script>
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Admin/Dashboard">Dashboard</a> | Resources
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Resources</span></h5>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    @Html.ActionLink("Add Resource", "Create", null, new { @class = "btn btn-sm btn-success" })
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger" id="errorMsg">
+                        <strong>Error!</strong> @TempData["Error"]
+                    </div>
+                    
+                        <div class="table-responsive">
+                            <table id="myTable" class="table table-bordered table-striped table-nowrap dataTable" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>
+                                            Resource
+                                        </th>
+                                        <th>
+                                            Type and Sub type
+                                        </th>
+                                        <th>
+                                            Serial No.
+                                        </th>
+                                        <th>
+                                            Status
+                                        </th>
+                                        <th style="text-align:center">Options</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ResourceID)
+                                        </td>
+                                        <td style="font-size: small">
+                                            @Html.DisplayFor(modelItem => item.Resource)
+                                        </td>
+                                        <td style="font-size: small">
+                                            @Html.DisplayFor(modelItem => item.TypeName) / @Html.DisplayFor(modelItem => item.SubTypeName)
+                                        </td>
+                                        <td style="font-size: small">
+                                            @Html.DisplayFor(modelItem => item.SerialNo)
+                                        </td>
+                                        <td style="font-size: small">
+                                            @Html.DisplayFor(modelItem => item.Description)
+                                        </td>
+                                        <td style="text-align:right">
+                                            @Html.ActionLink("Edit", "List", new { id = item.ResourceID }, new { @class = "btn btn-xs btn-outline-default" })
+                                            @{
+                                                    if (item.Flagged == true)
+                                                    {
+                                                <span class="hidden"><a href="#" class="btn btn-xs btn-outline-danger" onclick="DeleteData(@item.ResourceID)">Delete </a></span>
+                                                    }
+                                                    else
+                                                    {
+                                                <a href="#" class="btn btn-xs btn-outline-danger" onclick="DeleteData(@item.ResourceID)">Delete </a>
+                                                    }
+                                            }
+                                        </td>
+                                    </tr>
+                                                    }
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to delete one track, this procedure is irreversible.</p>
+                <p>Do you want to proceed?</p>
+                <p class="debug-url"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger" data-dismiss="modal" type="button" onclick="Delete()">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*hidden field for storing current Id*@
+<input type="hidden" id="hiddenId" />
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+
+    // ------------------- Delete Item -------------------
+    var DeleteData = function (ResultId) {
+        $("#hiddenId").val(ResultId);
+        $("#myModal").modal('show');
+    }
+
+    var Delete = function () {
+        var empId = $("#hiddenId").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/Resource/Delete",
+            data: { Id: empId },
+            success: function (result) {
+                $("#myModal").modal("hide");
+                window.location.replace("List", "Resource");
+            }
+        })
+    }
+    //--------------------------------------------------------
+</script>

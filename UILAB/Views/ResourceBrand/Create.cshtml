@@ -1,0 +1,126 @@
+﻿@model UILAB.Models.ResourceBrandTB
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["errorMessage"]' != "") {
+            $("#ErrorMsg").show();
+        }
+        else {
+            $("#ErrorMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["successMsg"]' != "") {
+            $("#SuccessMsg").show();
+            $('#SuccessMsg').delay(4000).hide(0);
+        }
+        else {
+            $("#SuccessMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["buttonMsg"]' != "") {
+            $("#ButtonMsg").show();
+        }
+        else {
+            $("#ButtonMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["viewImg"]' != "") {
+            $("#ViewImg").show();
+        }
+        else {
+            $("#ViewImg").hide();
+        }
+    });
+</script>
+
+@using (Html.BeginForm("Create", "ResourceBrand", FormMethod.Post, new { enctype = "multipart/form-data", @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.BrandID)
+
+    <div class="demo-form-wrapper">
+        <h4>@ViewBag.SubmitHeader Brand</h4>
+        <hr style="margin-top:5px" />
+
+        <div class="form-group">
+            <label>Resource Brand <span style="color: red">*</span></label>
+            <div>
+                @Html.EditorFor(model => model.Brand, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Brand, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Brand Image </label>
+            <div>
+                <input type="file" accept="image/*" name="file1" id="file1">
+                <p class="help-block">
+                    <small>
+                        Allowed File: .jpeg, .jpg, .png,
+                    </small>
+                </p>
+            </div>
+        </div>
+
+        <div class="form-group" hidden="hidden" id="ViewImg">
+            <img height="60" src="@ViewBag.Path" />
+        </div>
+
+        <div class="form-group" id="ErrorMsg" hidden="hidden">
+            <div class="alert alert-danger">
+                <span class="sidenav-icon icon icon-question-circle"></span> Brand <strong>"@TempData["errorMessage"]"</strong> Exists...!
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            <input type="submit" class="btn btn-primary" id="btnSave" name="SaveEntry" value="@ViewBag.SubmitValue" />
+            <a href="~/ResourceBrand/List" class="btn btn-warning" id="ButtonMsg">Clear </a>
+        </div>
+
+        <div class="form-group" id="SuccessMsg" hidden="hidden">
+            <div class="alert alert-success">
+                <span class="sidenav-icon icon icon-thumbs-up"></span> Brand @TempData["successMsg"]
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#CreateFormID').validate({
+            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+            errorElement: 'div',
+            errorPlacement: function (error, e) {
+                e.parents('.form-group > div').append(error);
+            },
+            highlight: function (e) {
+
+                $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                $(e).closest('.help-block').remove();
+            },
+            success: function (e) {
+                e.closest('.form-group').removeClass('has-success has-error');
+                e.closest('.help-block').remove();
+            },
+            rules: {
+                'Brand': {
+                    required: true,
+                }
+            },
+            messages: {
+                'Brand': 'This Field Required'
+            }
+        });
+    });
+</script>

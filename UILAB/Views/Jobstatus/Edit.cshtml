@@ -1,0 +1,104 @@
+﻿@model UILAB.Models.JobStatusTB
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        if('@TempData["ErrorMessage"]' != "")
+        {
+            $("#errorMsg").show();
+        }
+        else
+        {
+            $("#errorMsg").hide();
+        }
+    });
+</script>
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Admin/Dashboard">Dashboard</a> | <a href="~/JobStatus/List">Job Statuses</a> | Update Status
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Job Statuses</span></h5>
+    </div>
+    <div class="row gutter-xs">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    @Html.ActionLink("Back to List", "List", null, new { @class = "btn btn-sm btn-success" })
+                </div>
+                <div class="card-body">
+                    <div class="col-md-8">
+
+                        @using (Html.BeginForm("Edit", "JobStatus", FormMethod.Post, new { enctype = "multipart/form-data", @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+                            <div class="demo-form-wrapper">
+
+                                <div class="form form-horizontal">
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    @Html.HiddenFor(model => model.StatusID)
+
+                                    <div class="form-group" id="errorMsg">
+                                        <label class="col-sm-3 control-label"></label>
+                                        <div class="col-sm-9">
+                                            <div class="alert alert-danger">
+                                                <span class="sidenav-icon icon icon-question-circle"></span> Status <strong>"@TempData["ErrorMessage"]"</strong> Exists...!
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Status <span style="color: red">*</span></label>
+                                        <div class="col-sm-9">
+                                            @Html.EditorFor(model => model.StatusName, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.StatusName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"></label>
+                                        <div class="col-sm-9">
+                                            <input type="submit" value="Save" class="btn btn-primary" id="btnSave" name="SaveEntry" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#CreateFormID').validate({
+            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+            errorElement: 'div',
+            errorPlacement: function (error, e) {
+                e.parents('.form-group > div').append(error);
+            },
+            highlight: function (e) {
+
+                $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                $(e).closest('.help-block').remove();
+            },
+            success: function (e) {
+                e.closest('.form-group').removeClass('has-success has-error');
+                e.closest('.help-block').remove();
+            },
+            rules: {
+                'StatusName': {
+                    required: true,
+                }
+            },
+            messages: {
+                'StatusName': 'This Field Required'
+            }
+        });
+    });
+</script>

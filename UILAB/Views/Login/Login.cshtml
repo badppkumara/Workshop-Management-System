@@ -1,0 +1,60 @@
+﻿@model UILAB.Models.LoginViewModel
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="login-body">
+        <a class="login-brand" href="index.html">
+            @*<img class="img-responsive" src="~/Content/img/erp-logo.png" alt="Elephant">*@
+            <img class="img-responsive" src="~/Content/img/Dracevich-Logo.png"/>
+        </a>
+        <div class="login-form">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <form data-toggle="validator">
+                <div class="form-group">
+                    <label>@Html.LabelFor(model => model.Username) or Email</label>
+                    @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @maxlength = 20 })
+                    @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label>@Html.LabelFor(model => model.Password)</label>
+                    @Html.PasswordFor(model => model.Password, new { @class = "form-control", @maxlength = 30 })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label class="custom-control custom-control-primary custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" checked="checked">
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-label">Keep me signed in</span>
+                    </label>
+                    <span aria-hidden="true"> · </span>
+                    @*<a href="password-2.html">Forgot password?</a>*@
+                </div>
+                <div class="form-group">
+                    <input id="Submit1" class="btn btn-primary btn-block" type="submit" value="Sign in">
+                    </div>
+                    <div class="form-group" id="errormsg">
+
+                        @if (TempData["errormessage"] != null)
+                        {
+                            <p class="alert alert-danger" id="successMessage">@TempData["errormessage"]</p>
+                        }
+
+                        @if (ViewBag.errormessage != null)
+                        {
+                            <div class="alert alert-danger" role="alert" id="successMessage">@ViewBag.errormessage</div>
+                        }
+                    </div>
+</form>
+        </div>
+        <div class="login-footer">
+            <ul class="list-inline">
+                <li>2020 &copy; Allrights Reserved | <a href="#">System Solutions</a>.</li>
+            </ul>
+        </div>
+    </div>
+
+}

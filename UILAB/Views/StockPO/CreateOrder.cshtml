@@ -1,0 +1,51 @@
+﻿@model UILAB.Models.StockPurchaseOrderTR
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "CreateOrder";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Admin/Dashboard">Dashboard</a> | <a href="~/StockPO/List">Purchase Orders</a> | @Model.PONO
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Purchase Orders</span></h5>
+    </div>
+    <div class="row gutter-xs">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="col-md-3">
+                        @Html.Action("AddItem")
+                    </div>
+                    <div class="col-md-9">
+                        @Html.Action("OrderList")
+                        <hr />
+
+                        @{
+                            @*using (var db = new DatabaseContext())
+                            {
+                                var task = (from data in db.vw_JobTasksTRs where data.JobID == Model.JobID select data).ToList();
+                                var completed = (from data in db.vw_JobTasksTRs where data.JobID == Model.JobID && data.Code == "COMPLETE" select data).ToList();
+                                int taskcount = task.Count;
+                                int completedcount = completed.Count;
+
+                                if (taskcount == completedcount)
+                                {
+                                    @Html.Action("CompleteJob")
+                                }
+                                else
+                                {
+                                    <span class="hidden"></span>
+                                }
+                            }*@
+                        }
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

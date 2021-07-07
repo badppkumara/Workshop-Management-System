@@ -1,0 +1,156 @@
+﻿@model IEnumerable<UILAB.Models.StockBrandTB>
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<script type="text/javascript">
+
+    var flag = "@TempData["Success"]";
+    var flag2 = "@TempData["Deleted"]";
+    var flag3 = "@TempData["Updated"]";
+
+    if (flag == "Success") {
+        toastr.success('Success!... Item Created')
+    }
+
+    if (flag2 == "Deleted") {
+        toastr.error('Success!... Item Deleted')
+    }
+
+    if (flag3 == "Updated") {
+        toastr.success('Success!... Item Updated')
+    }
+
+</script>
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Admin/Dashboard">Dashboard</a> | Product Brands
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Product Brands</span></h5>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">                
+                <div class="card-body">
+                    <div class="col-md-4">
+                        @Html.Action("Create")
+                    </div>
+                    <div class="col-md-8">
+                        <div class="table-responsive">
+                            <table id="myTable" class="table table-bordered table-striped table-nowrap dataTable" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>
+                                            Brand
+                                        </th>
+                                        <th>Image</th>
+                                        <th style="text-align:center">Options</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.BrandID)
+                                        </td>
+                                        <td style="font-size: small">
+                                            @Html.DisplayFor(modelItem => item.Brand)
+                                        </td>
+                                        <td style="text-align:center">
+                                            @{
+                                                using (var db = new DatabaseContext())
+                                                {
+                                                    var type = db.FileProducts.SingleOrDefault(b => b.FileID == item.FileID && b.FileTypeID == 1);
+
+                                                    if (type != null)
+                                                    {
+                                                        string strFileName = string.Empty;
+                                                        strFileName = Path.GetFileName(type.FileName);
+                                                        <img id="myImg" src="@Url.Content("~/Files/StockBrand/" + strFileName)" height="40" />
+                                                    }
+                                                }
+                                            }
+                                        </td>
+
+                                        <td style="text-align:right">
+                                            @Html.ActionLink("Edit", "List", new { id = item.BrandID }, new { @class = "btn btn-xs btn-outline-default" })
+                                            @{
+                                                    if (item.Flagged == true)
+                                                    {
+                                                <span class="hidden"><a href="#" class="btn btn-xs btn-outline-danger" onclick="DeleteData(@item.BrandID)">Delete </a></span>
+                                                    }
+                                                    else
+                                                    {
+                                                <a href="#" class="btn btn-xs btn-outline-danger" onclick="DeleteData(@item.BrandID)">Delete </a>
+                                                    }
+                                            }
+                                        </td>
+                                    </tr>
+                                                    }
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to delete one track, this procedure is irreversible.</p>
+                <p>Do you want to proceed?</p>
+                <p class="debug-url"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger" data-dismiss="modal" type="button" onclick="Delete()">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*hidden field for storing current Id*@
+<input type="hidden" id="hiddenId" />
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+
+    // ------------------- Delete Item -------------------
+    var DeleteData = function (ResultId) {
+        $("#hiddenId").val(ResultId);
+        $("#myModal").modal('show');
+    }
+
+    var Delete = function () {
+        var empId = $("#hiddenId").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/StockBrand/Delete",
+            data: { Id: empId },
+            success: function (result) {
+                $("#myModal").modal("hide");
+                window.location.replace("List", "StockBrand");
+            }
+        })
+    }
+    //--------------------------------------------------------
+</script>
+

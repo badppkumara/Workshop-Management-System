@@ -1,0 +1,262 @@
+﻿@model UILAB.Models.JobPackageTB
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["errorMessage"]' != "") {
+            $("#ErrorMsg").show();
+        }
+        else {
+            $("#ErrorMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["successMsg"]' != "") {
+            $("#SuccessMsg").show();
+            $('#SuccessMsg').delay(4000).hide(0);
+        }
+        else {
+            $("#SuccessMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["buttonMsg"]' != "") {
+            $("#ButtonMsg").show();
+        }
+        else {
+            $("#ButtonMsg").hide();
+        }
+    });
+</script>
+
+<script type="text/javascript">
+    function Search_Gridview(strKey) {
+        var strData = strKey.value.toLowerCase().split(" ");
+        var tblData = document.getElementById("DataTable2");
+        var rowData;
+        for (var i = 1; i < tblData.rows.length; i++) {
+            rowData = tblData.rows[i].innerHTML;
+            var styleDisplay = 'none';
+            for (var j = 0; j < strData.length; j++) {
+                if (rowData.toLowerCase().indexOf(strData[j]) >= 0)
+                    styleDisplay = '';
+                else {
+                    styleDisplay = 'none';
+                    break;
+                }
+            }
+            tblData.rows[i].style.display = styleDisplay;
+        }
+    }
+
+    $(document).ready(function () {
+        $('#DataTable2');
+        $('#checkBoxAll').click(function () {
+            if ($(this).is(":checked")) {
+                $(".chkCheckBoxId").prop("checked", true)
+            }
+            else {
+                $(".chkCheckBoxId").prop("checked", false)
+            }
+        });
+    });
+
+    // <![CDATA[
+    function addRow() {
+        //copy the table row and clear the value of the input, then append the row to the end of the table
+        $("#formTable tbody tr:first").clone().find("input").each(function () {
+            $(this).val('');
+        }).end().appendTo("#formTable");
+    }
+    // ]]>
+</script>
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Admin/Dashboard">Dashboard</a> | <a href="~/JobPackage/List">Packages</a> | Update Package
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Packages</span></h5>
+    </div>
+    <div class="row gutter-xs">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    @Html.ActionLink("Back to List", "List", null, new { @class = "btn btn-sm btn-success" })
+                </div>
+                <div class="card-body">
+                    <div class="col-md-4">
+
+                        @using (Html.BeginForm("Edit", "JobPackage", FormMethod.Post, new { enctype = "multipart/form-data", @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+                            <div class="demo-form-wrapper">
+                                <h4>@ViewBag.SubmitHeader</h4>
+                                <hr style="margin-top:5px" />
+
+                                <div class="form form-horizontal">
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    @Html.HiddenFor(model => model.PackageID)
+
+                                    <div class="form-group form-group-sm">
+                                        <label class="col-sm-3 control-label">Package <span style="color: red">*</span></label>
+                                        <div class="col-sm-9">
+                                            @Html.EditorFor(model => model.PackageName, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.PackageName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <label class="col-sm-3 control-label">Job Type </label>
+                                        <div class="col-sm-9">
+                                            @Html.DropDownListFor(model => model.TypeID, ViewBag.List as SelectList, "--- Select Job Type ---", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.TypeID, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="ErrorMsg" hidden="hidden">
+                                        <div class="alert alert-danger">
+                                            <span class="sidenav-icon icon icon-question-circle"></span> Category <strong>"@TempData["errorMessage"]"</strong> Exists...!
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <label class="col-sm-3 control-label"></label>
+                                        <div class="col-sm-9">
+                                            <input type="submit" class="btn btn-primary" id="btnSave" name="SaveEntry" value="@ViewBag.SubmitValue" />
+                                            <a href="~/JobType/List" class="btn btn-warning" id="ButtonMsg">Clear </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="SuccessMsg" hidden="hidden">
+                                        <div class="alert alert-success">
+                                            <span class="sidenav-icon icon icon-thumbs-up"></span> @TempData["successMsg"]
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group form-group-sm">
+                            <div style="padding-top:5px">
+                                <input type="text" class="form-control" onkeyup="Search_Gridview(this)" placeholder="Search" />
+                            </div>
+                        </div>
+                        <div class="table-responsive" style="margin-top:10px; overflow:auto; height:300px">
+                            <table id="DataTable2" style="width:100%;" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="checkBoxAll" class="custom-checkbox" /></th>
+                                        <th>Job Tasks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        using (var db = new DatabaseContext())
+                                        {
+                                            var task = (from data in db.JobTasksTBs orderby data.TaskName ascending select data).ToList();
+
+                                            foreach (var taskitem in task)
+                                            {
+                                                var taskset = db.JobPackageLists.SingleOrDefault(b => b.TaskID == taskitem.TaskID && b.PackageID == Model.PackageID);
+                                                if (taskset != null)
+                                                {
+                                                    <tr>
+                                                        <td><input type="checkbox" name="ID" value="@taskitem.TaskID" class="custom-checkbox chkCheckBoxId" checked="checked" /></td>
+                                                        <td>@taskitem.TaskName</td>
+                                                    </tr>
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        <td><input type="checkbox" name="ID" value="@taskitem.TaskID" class="custom-checkbox chkCheckBoxId" /></td>
+                                                        <td>@taskitem.TaskName</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="card-body">
+                                <strong>Add New Job Task</strong> | <a style="padding-right:250px" href="javascript:addRow();">Add Row</a>
+                                <hr style="margin:5px" />
+                                <div class="row">
+                                    <div class="form-group form-group-sm">
+                                        <div class="col-sm-12">
+
+                                            <table id="formTable" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><input type="text" name="taskname" class="form-control" placeholder="Task Name" style="margin-bottom:5px" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            @*<input id="task1" name="task1" class="form-control" type="text" placeholder="Task Name">*@
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        $('#CreateFormID').validate({
+            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+            errorElement: 'div',
+            errorPlacement: function (error, e) {
+                e.parents('.form-group > div').append(error);
+            },
+            highlight: function (e) {
+
+                $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                $(e).closest('.help-block').remove();
+            },
+            success: function (e) {
+                e.closest('.form-group').removeClass('has-success has-error');
+                e.closest('.help-block').remove();
+            },
+            rules: {
+                'TaskType': {
+                    required: true,
+                },
+                'TypeID': {
+                    required: true,
+                }
+            },
+            messages: {
+                'TaskType': 'This Field Required'
+            },
+            messages: {
+                'TypeID': 'This Field Required'
+            }
+        });
+    });
+</script>
+
+

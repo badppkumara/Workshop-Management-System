@@ -1,0 +1,54 @@
+﻿@model IEnumerable<UILAB.Models.ResourceUserTR>
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "AssignedList";
+    Layout = null;
+}
+
+@*<div class="table-responsive">
+    <table id="myTable" class="table table-bordered table-striped table-nowrap dataTable" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>
+                    Resource
+                </th>
+                <th style="text-align:center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @{
+                            using (var db = new DatabaseContext())
+                            {
+                                var type = db.ResourceTRs.SingleOrDefault(b => b.ResourceID == item.ResourceID && b.SegmentID == item.SegmentID);
+
+                                if (type != null)
+                                {
+                                    @Html.DisplayFor(modelItem => type.Resource)
+                                }
+                            }
+                        }
+                    </td>
+                    
+                    <td style="text-align:right">
+                        @Html.ActionLink("Delete", "DeleteList", new { id = item.AssignedID }, new { @class = "btn btn-xs btn-default" })
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>*@
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+
+</script>
+
+
+

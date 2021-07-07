@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - ERP Web Application</title>
+    <meta content="Login Page" name="description" />
+    <meta content="System Solutions" name="author" />
+    <link rel="apple-touch-icon" sizes="180x180" href="~/Content/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="~/Content/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="~/Content/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="~/Content/manifest.json">
+    <link rel="mask-icon" href="~/Content/safari-pinned-tab.svg" color="#d9230f">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400italic,500,700">
+    <link href="~/Content/css/vendor.min.css" rel="stylesheet" />
+    <link href="~/Content/css/login-2.min.css" rel="stylesheet" />
+    <link href="~/Content/css/elephant.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        function disableBackButton() {
+            window.history.forward();
+        }
+        setTimeout("disableBackButton()", 0);
+
+        window.onunload = function () {
+            null
+        };
+
+        //setTimeout(function () {
+        //    $('#errormsg').fadeOut('fade');
+        //}, 4000);
+
+    </script>
+    <style>
+        body {
+            background: url(../../Content/img/main-banner.jpg) no-repeat;
+            background-size: cover;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="login">        
+            @RenderBody()      
+    </div>
+    <script src="~/Content/js/vendor.min.js"></script>
+    <script src="~/Contentjs/elephant.min.js"></script>
+</body>
+</html>

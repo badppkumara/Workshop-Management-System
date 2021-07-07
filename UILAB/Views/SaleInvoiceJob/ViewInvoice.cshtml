@@ -1,0 +1,143 @@
+﻿@model UILAB.Models.SalesInvoiceListTR
+@{
+    ViewBag.Title = "ViewInvoice ";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<script type="text/javascript">
+    var flag = "@TempData["ErrorMessage"]";
+    if (flag == "") {
+        $("#errorMsg").hide();
+    }
+    else {
+        $("#errorMsg").show();
+    }
+</script>
+
+<script type="text/javascript">
+    var flag = "@TempData["Success"]";
+    var flag2 = "@TempData["Deleted"]";
+    var flag3 = "@TempData["Updated"]";
+
+    if (flag == "Success") {
+        toastr.success('Success!... Item Created')
+    }
+
+    if (flag2 == "Deleted") {
+        toastr.error('Success!... Item Deleted')
+    }
+
+    if (flag3 == "Updated") {
+        toastr.success('Success!... Item Updated')
+    }
+
+</script>
+
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="/Admin/Dashboard">Dashboard</a> | <a href="/Invoice/List">Invoices</a> | @TempData["invoiceno"]
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">@TempData["invoiceno"] - @TempData["brand"] @TempData["model"]</span></h5>
+    </div>
+    <div class="row gutter-xs">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    @Html.ActionLink("Back to List", "List", null, new { @class = "btn btn-sm btn-success" })
+                </div>
+                <div class="card-body">
+                    <div class="col-md-12">
+                        @Html.Action("InvoiceDetail")
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        $('#CreateFormID').validate({
+            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+            errorElement: 'div',
+            errorPlacement: function (error, e) {
+                e.parents('.form-group > div').append(error);
+            },
+            highlight: function (e) {
+
+                $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                $(e).closest('.help-block').remove();
+            },
+            success: function (e) {
+                e.closest('.form-group').removeClass('has-success has-error');
+                e.closest('.help-block').remove();
+            },
+            rules: {
+                'ProductsTRs.ProductID': {
+                    required: true,
+                },
+                'SalesPOTempTRs.Qty': {
+                    required: true,
+                },
+                'ProductUnitMasters.ProductUnitID': {
+                    required: true,
+                },
+                'SalesPOTempTRs.UnitAmount': {
+                    required: true,
+                }
+            },
+            messages: {
+                'ProductsTRs.ProductID': 'This Field Required'
+            },
+            messages: {
+                'SalesPOTempTRs.Qty': 'This Field Required'
+            },
+            messages: {
+                'ProductUnitMasters.ProductUnitID': 'This Field Required'
+            },
+            messages: {
+                'SalesPOTempTRs.UnitAmount': 'This Field Required'
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $('#OrderDate').inputmask("datetime", {
+            mask: "1-2-y",
+            placeholder: "dd-mm-yyyy",
+            leapday: "-02-29",
+            separator: "-",
+            alias: "dd-mm-yyyy"
+        });
+
+        $('#qtylabour').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99
+        });
+        $('#unitprice').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99,
+        });
+        $('#discount').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99,
+        });
+        $('#tax').inputmask({
+            alias: 'numeric',
+            allowMinus: true,
+            digits: 2,
+            max: 999999.99,
+        });
+    });
+
+</script>

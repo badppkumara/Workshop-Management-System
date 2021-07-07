@@ -1,0 +1,335 @@
+﻿@model UILAB.Models.StockPurchaseOrderTR
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["errorMessage"]' != "") {
+            $("#ErrorMsg").show();
+        }
+        else {
+            $("#ErrorMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["successMsg"]' != "") {
+            $("#SuccessMsg").show();
+            $('#SuccessMsg').delay(4000).hide(0);
+        }
+        else {
+            $("#SuccessMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["buttonMsg"]' != "") {
+            $("#ButtonMsg").show();
+        }
+        else {
+            $("#ButtonMsg").hide();
+        }
+    });
+
+    $(document).on('change', '#newsupplier', function () {
+        if ($(this).prop('checked')) {
+            $('#selectsupplier').attr('disabled', 'disabled');
+            $('#company').removeAttr('disabled', 'disabled');
+            $('#mobile').removeAttr('disabled', 'disabled');
+            $('#firstname').removeAttr('disabled', 'disabled');
+            $('#lastname').removeAttr('disabled', 'disabled');
+
+        } else {
+            $('#selectsupplier').removeAttr('disabled');
+            $('#company').attr('disabled', 'disabled');
+            $('#mobile').attr('disabled', 'disabled');
+            $('#firstname').attr('disabled', 'disabled');
+            $('#lastname').attr('disabled', 'disabled');
+        }
+    });
+
+    $(document).on('change', '#nwarehouse', function () {
+        if ($(this).prop('checked')) {
+            $('#selectwarehouse').attr('disabled', 'disabled');
+            $('#warehouse').removeAttr('disabled', 'disabled');
+            $("#warehousediv").show();
+
+        } else {
+            $('#selectwarehouse').removeAttr('disabled');
+            $('#warehouse').attr('disabled', 'disabled');
+            $("#warehousediv").hide();
+        }
+    });
+</script>
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Admin/Dashboard">Dashboard</a> | <a href="~/StockPO/List">Purchase Orders</a> | Add Purchase Order
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Purchase Orders</span></h5>
+    </div>
+    <div class="row gutter-xs">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    @Html.ActionLink("Back to List", "List", null, new { @class = "btn btn-sm btn-primary" })
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("Create", "StockPO", FormMethod.Post, new { enctype = "multipart/form-data", @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(model => model.POID)
+                        <div class="col-md-6">
+                            <div class="demo-form-wrapper">
+
+                                <div class="form-group form-group-sm">
+                                    <label>PO No.</label>
+                                    <div>
+                                        @Html.EditorFor(model => model.PONO, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-group-sm">
+                                    <label>Warehouse <span style="color: red">*</span></label>
+                                    <div>
+                                        @Html.DropDownListFor(model => model.WarehouseID, ViewBag.WarehouseList as SelectList, "Select Warehouse", new { @class = "form-control", @id = "selectwarehouse" })
+                                        @Html.ValidationMessageFor(model => model.WarehouseID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="form-group form-group-sm" style="margin-top: 2px">
+                                    <label class="custom-control custom-control-primary custom-checkbox">
+                                        <input class="custom-control-input" type="checkbox" name="nwarehouse" id="nwarehouse" value="True">
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                    <strong>Add Warehouse</strong>
+                                </div>
+
+                                <div class="form-group form-group-sm" id="warehousediv" hidden="hidden">
+                                    <label>Warehouse <span style="color: red">*</span></label>
+                                    <div>
+                                        <input id="warehouse" name="warehouse" class="form-control" type="text" disabled="disabled">
+                                    </div>
+                                </div>
+                                <hr />
+
+                                <div class="form-group form-group-sm">
+                                    <label>Supplier <span style="color: red">*</span></label>
+                                    <div>
+                                        @Html.DropDownListFor(model => model.SupplierID, ViewBag.SupplierList as SelectList, "Select Supplier", new { @class = "form-control", @id = "selectsupplier" })
+                                        @Html.ValidationMessageFor(model => model.SupplierID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-group-sm">
+                                    <label>Referrance </label>
+                                    <div>
+                                        @Html.EditorFor(model => model.Referance, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Referance, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-sm">
+                                            <label>Purchase Date <span style="color: red">*</span></label>
+                                            <div class="input-with-icon">
+                                                <input id="PODate" name="PODate" class="form-control" type="text" data-provide="datepicker" data-date-autoclose="true" data-date-format="dd-mm-yyyy"
+                                                       data-date-today-highlight="true" autocomplete="off">
+                                                <span class="icon icon-calendar input-icon"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-sm">
+                                            <label>Status <span style="color: red">*</span></label>
+                                            <div>
+                                                @Html.DropDownListFor(model => model.StatusID, ViewBag.StatusList as SelectList, "Select Status", new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.StatusID, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-group-sm">
+                                    <label>Description </label>
+                                    <div>
+                                        @Html.TextAreaFor(model => model.Remark, 5, 40, new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-group-sm">
+                                    <label></label>
+                                    <div>
+                                        <input type="file" multiple="multiple" name="FileUpload" id="FileUpload">
+                                        <p class="help-block">
+                                            <small>
+                                                Allowed File: .pdf, .csv, .zip, .doc, .docx,  .xlsx, .jpeg, .jpg, .png,
+                                            </small>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="ErrorMsg" hidden="hidden">
+                                    <div class="alert alert-danger">
+                                        <span class="sidenav-icon icon icon-question-circle"></span> Company <strong>"@TempData["errorMessage"]"</strong> Exists...!
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-group-sm">
+                                    <input type="submit" class="btn btn-primary btn-block" id="btnSave" name="SaveEntry" value="Create Purchase Order" />
+                                </div>
+
+                                <div class="form-group" id="SuccessMsg" hidden="hidden">
+                                    <div class="alert alert-success">
+                                        <span class="sidenav-icon icon icon-thumbs-up"></span> Warehouse @TempData["successMsg"]
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- tabs left -->
+                            <div class="tabbable tabs">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#a" data-toggle="tab">Add Supplier, Warehouse</a></li>
+                                    @*<li><a href="#b" data-toggle="tab">Assign Job Task</a></li>
+                                        <li><a href="#c" data-toggle="tab">Assign Employee</a></li>*@
+                                    @*<li><a href="#d" data-toggle="tab">Create Invoice</a></li>*@
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="a">
+                                        <div class="form-group form-group-sm" style="margin-top:10px">
+                                            <label class="custom-control custom-control-primary custom-checkbox">
+                                                <input class="custom-control-input" type="checkbox" name="newsupplier" id="newsupplier" value="True">
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-label"></span>
+                                            </label>
+                                            <strong>Add Supplier</strong>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group form-group-sm">
+                                                    <label>Company <span style="color: red">*</span></label>
+                                                    <div>
+                                                        <input id="company" name="company" class="form-control" type="text" disabled="disabled">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group form-group-sm">
+                                                    <label>Mobile <span style="color: red">*</span></label>
+                                                    <div>
+                                                        <input id="mobile" name="mobile" class="form-control" type="text" disabled="disabled">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group form-group-sm">
+                                                    <label>First Name </label>
+                                                    <div>
+                                                        <input id="firstname" name="firstname" class="form-control" type="text" disabled="disabled">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group form-group-sm">
+                                                    <label>Last Name </label>
+                                                    <div>
+                                                        <input id="lastname" name="lastname" class="form-control" type="text" disabled="disabled">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr style="margin-top:5px" />
+
+
+                                    </div>
+
+                                    <div class="tab-pane" id="b">
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#CreateFormID').validate({
+            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+            errorElement: 'div',
+            errorPlacement: function (error, e) {
+                e.parents('.form-group > div').append(error);
+            },
+            highlight: function (e) {
+
+                $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                $(e).closest('.help-block').remove();
+            },
+            success: function (e) {
+                e.closest('.form-group').removeClass('has-success has-error');
+                e.closest('.help-block').remove();
+            },
+            rules: {
+                'WarehouseID': {
+                    required: true,
+                },
+                'SupplierID': {
+                    required: true,
+                },
+                'StatusID': {
+                    required: true,
+                },
+                'company': {
+                    required: true,
+                },
+                'mobile': {
+                    required: true,
+                },
+                'warehouse': {
+                    required: true,
+                },
+                'PODate': {
+                    required: true,
+                }
+            },
+            messages: {
+                'WarehouseID': 'This Field Required'
+            },
+            messages: {
+                'SupplierID': 'This Field Required'
+            },
+            messages: {
+                'StatusID': 'This Field Required'
+            },
+            messages: {
+                'company': 'This Field Required'
+            },
+            messages: {
+                'mobile': 'This Field Required'
+            },
+            messages: {
+                'warehouse': 'This Field Required'
+            },
+            messages: {
+                'PODate': 'This Field Required'
+            }
+        });
+    });
+</script>

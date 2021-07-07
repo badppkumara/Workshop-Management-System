@@ -1,0 +1,84 @@
+﻿@model UILAB.Models.EmployeeMaster
+@{
+    ViewBag.Title = "CreateBulk";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["ErrorMessage"]' != "") {
+            $("#errorMsg").show();
+        }
+        else {
+            $("#errorMsg").hide();
+        }
+    });
+</script>
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="/Admin/Dashboard">Dashboard</a> | <a href="/Employee/List">Employees</a> | Bulk Upload
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Bulk Upload</span></h5>
+    </div>
+    <div class="row gutter-xs">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    @Html.ActionLink("Back to List", "List", null, new { @class = "btn btn-sm btn-success" })
+                </div>
+                <div class="card-body">
+                    <div class="col-md-8">
+                        @using (Html.BeginForm("CreateBulk", "Employee", FormMethod.Post, new { enctype = "multipart/form-data", @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+                        {
+
+                            @Html.AntiForgeryToken()
+                            HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+                            <div class="demo-form-wrapper">
+
+                                <div class="form form-horizontal">
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    @Html.HiddenFor(model => model.EmployeeNo)
+                                    @Html.HiddenFor(model => model.SegmentID)
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Download Excel File <span style="color: red">*</span></label>
+                                        <div class="col-sm-9">
+                                            <div style="width:90px">
+                                                <a class="file-link" href="/Employee/DownloadExcel/" title="Bulk Employee File" alt="excel">
+                                                    <div class="file-thumbnail file-thumbnail-xls"></div>
+                                                    <div class="file-info">
+                                                        <span class="file-name">Employees.xlsx</span>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Upload File <span style="color: red">*</span></label>
+                                        <div class="col-sm-9">
+                                            <input type="file" id="FileUpload" name="FileUpload" class="" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"></label>
+                                        <div class="col-sm-9">
+                                            <input type="submit" value="Upload" class="btn btn-primary" id="btnSubmit" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="errorMsg">
+                                        <div style="color:firebrick">@TempData["ErrorMessage"]</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+

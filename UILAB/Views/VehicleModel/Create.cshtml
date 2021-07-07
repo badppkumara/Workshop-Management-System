@@ -1,0 +1,123 @@
+﻿@model UILAB.Models.VehicleModelTB
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@TempData["errorMessage"]' != "") {
+            $("#ErrorMsg").show();
+        }
+        else {
+            $("#ErrorMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["successMsg"]' != "") {
+            $("#SuccessMsg").show();
+            $('#SuccessMsg').delay(4000).hide(0);
+        }
+        else {
+            $("#SuccessMsg").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        if ('@TempData["buttonMsg"]' != "") {
+            $("#ButtonMsg").show();
+        }
+        else {
+            $("#ButtonMsg").hide();
+        }
+    });
+</script>
+
+@using (Html.BeginForm("Create", "VehicleModel", FormMethod.Post, new { enctype = "multipart/form-data", @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+    <div class="demo-form-wrapper">
+        <h4>@ViewBag.SubmitHeader Vehicle Model</h4>
+        <hr style="margin-top:5px" />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ModelID)
+
+        <div class="form-group form-group-sm">
+            <label>Model Name <span style="color: red">*</span></label>
+            <div>
+                @Html.EditorFor(model => model.ModelName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ModelName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            <label>Vehicle Make <span style="color: red">*</span></label>
+            <div>
+                @Html.DropDownListFor(model => model.MakeID, ViewBag.MakeList as SelectList, "--- Select Make ---", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MakeID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            <label>Body Type </label>
+            <div>
+                @Html.DropDownListFor(model => model.ModelTypeID, ViewBag.TypeList as SelectList, "--- Select Body Type ---", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ModelTypeID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group" id="ErrorMsg" hidden="hidden">
+            <div class="alert alert-danger">
+                <span class="sidenav-icon icon icon-question-circle"></span> Vehicle Model <strong>"@TempData["vehiclemake"] - @TempData["errorMessage"]"</strong> Exists...!
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            <input type="submit" class="btn btn-primary" id="btnSave" name="SaveEntry" value="@ViewBag.SubmitValue" />
+            <a href="~/VehicleModel/List" class="btn btn-warning" id="ButtonMsg">Clear </a>
+        </div>
+
+        <div class="form-group" id="SuccessMsg" hidden="hidden">
+            <div class="alert alert-success">
+                <span class="sidenav-icon icon icon-thumbs-up"></span> Vehicle Model @TempData["successMsg"]
+            </div>
+        </div>
+
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#CreateFormID').validate({
+            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+            errorElement: 'div',
+            errorPlacement: function (error, e) {
+                e.parents('.form-group > div').append(error);
+            },
+            highlight: function (e) {
+
+                $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                $(e).closest('.help-block').remove();
+            },
+            success: function (e) {
+                e.closest('.form-group').removeClass('has-success has-error');
+                e.closest('.help-block').remove();
+            },
+            rules: {
+                'ModelName': {
+                    required: true,
+                },
+                'MakeID': {
+                    required: true,
+                }
+            },
+            messages: {
+                'ModelName': 'This Field Required'
+            },
+            messages: {
+                'MakeID': 'This Field Required'
+            }
+        });
+    });
+</script>

@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UILAB", "UILAB\UILAB.csproj", "{21130798-3BA0-4561-A4D2-67980AF19291}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UILAB.Interface", "UILAB.Interface\UILAB.Interface.csproj", "{4A85D6FF-5AF2-4B81-B4AB-860F48CE3FD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UILAB.Models", "UILAB.Models\UILAB.Models.csproj", "{ABF02A5C-7AC6-4D91-8876-0BDF856661BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UILAB.Concrete", "UILAB.Concrete\UILAB.Concrete.csproj", "{F3693EAB-32CF-4131-B928-6506B238D7A1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{21130798-3BA0-4561-A4D2-67980AF19291}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21130798-3BA0-4561-A4D2-67980AF19291}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21130798-3BA0-4561-A4D2-67980AF19291}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21130798-3BA0-4561-A4D2-67980AF19291}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A85D6FF-5AF2-4B81-B4AB-860F48CE3FD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A85D6FF-5AF2-4B81-B4AB-860F48CE3FD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A85D6FF-5AF2-4B81-B4AB-860F48CE3FD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A85D6FF-5AF2-4B81-B4AB-860F48CE3FD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABF02A5C-7AC6-4D91-8876-0BDF856661BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABF02A5C-7AC6-4D91-8876-0BDF856661BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABF02A5C-7AC6-4D91-8876-0BDF856661BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABF02A5C-7AC6-4D91-8876-0BDF856661BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3693EAB-32CF-4131-B928-6506B238D7A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3693EAB-32CF-4131-B928-6506B238D7A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3693EAB-32CF-4131-B928-6506B238D7A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3693EAB-32CF-4131-B928-6506B238D7A1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

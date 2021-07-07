@@ -1,0 +1,114 @@
+﻿@model IEnumerable<UILAB.Models.vw_ApprovalGroupTR>
+@{
+    ViewBag.Title = "Groups";
+    Layout = null;
+}
+<script type="text/javascript">
+
+    var flag = "@TempData["Success"]";
+    var flag2 = "@TempData["Deleted"]";
+    var flag3 = "@TempData["Updated"]";
+
+    if (flag == "Success") {
+        toastr.success('Success!... Item Created')
+    }
+
+    if (flag2 == "Deleted") {
+        toastr.error('Success!... Item Deleted')
+    }
+
+    if (flag3 == "Updated") {
+        toastr.success('Success!... Item Updated')
+    }
+
+</script>
+<div class="card-body">
+    <div class="col-md-4">
+        @Html.Action("CreateGroup")
+    </div>
+    <div class="col-md-8">
+        <div class="table-responsive">
+            <table id="myTableGroup" class="table table-bordered table-striped table-nowrap dataTable" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Group Name</th>
+                        <th>
+                            Scheme Name
+                        </th>
+                        <th>
+                            Code
+                        </th>
+                        <th style="text-align:center">Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ApprovalGroupID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.GroupName)
+                            </td>
+                            <td style="font-size: small">
+                                @Html.DisplayFor(modelItem => item.SchemeName)
+                            </td>
+                            <td style="font-size: small">
+                                @Html.DisplayFor(modelItem => item.Code)
+                            </td>
+                            <td style="text-align:right">
+                                @Html.ActionLink("Edit", "List", new { id = item.ApprovalGroupID }, new { @class = "btn btn-xs btn-outline-default" })
+                                @{
+                                    if (item.Flagged == true)
+                                    {
+                                        <span class="hidden"><a href="#" class="btn btn-xs btn-outline-danger" onclick="DeleteData(@item.ApprovalGroupID)">Delete </a></span>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-xs btn-outline-danger" onclick="DeleteData(@item.ApprovalGroupID)">Delete </a>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                                    }
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+@*hidden field for storing current employeeId*@
+<input type="hidden" id="hiddenIdGroup" />
+<script>
+        $(document).ready(function () {
+            $('#myTableGroup').DataTable();
+        });
+
+        // ------------------- Delete Item -------------------
+        var DeleteData = function (EmployeeId) {
+            $("#hiddenIdGroup").val(EmployeeId);
+            $("#myModalGroup").modal('show');
+        }
+
+        var Delete = function () {
+            var empId = $("#hiddenIdGroup").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/SettingApproval/DeleteGroup",
+                data: { Id: empId },
+                success: function (result) {
+                    $("#myModalGroup").modal("hide");
+                    window.location.replace("Groups", "SettingApproval");
+                }
+            })
+        }
+        //--------------------------------------------------------
+</script>
+
+

@@ -1,0 +1,91 @@
+﻿@model UILAB.Models.vw_VehicleTR
+@using UILAB.Concrete
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="layout-content-body">
+    <div class="title-bar">
+        <div class="title-bar-actions">
+            <a href="~/Admin/Dashboard">Dashboard</a> | @Html.ActionLink("Vehicles", "List", "Vehicles") | @Model.PlateNo
+        </div>
+        <h5><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">@Model.PlateNo @Model.Make @Model.ModelName</span></h5>
+    </div>
+    <div class="row gutter-xs">
+        <div class="col-xs-12">
+            <div class="panel m-b-lg">
+                <ul class="nav nav-tabs" id="myTab">
+                    <li class="active">
+                        <a href="#tab1" data-toggle="tab">General</a>
+                    </li>
+                    <li>
+                        <a href="#tab2" data-toggle="tab">Jobs</a>
+                    </li>
+                    <li>
+                        <a href="#tab3" data-toggle="tab">Invoices</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="tab1">
+
+                        <div class="card-body">
+                            <div class="col-md-4">
+
+                            </div>
+
+                            <div class="col-md-8">
+
+                                <h4><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Vehicle Information</span></h4>
+
+                                Year: @Model.Year <br />
+                                Make: @Model.Make<br />
+                                Model: @Model.ModelName<br />
+                                Colour: Black<br />
+                                Body Style: @Model.ModelType<br />
+                                VIN:<br />
+                                Engine No: @Model.EngineNo<br />
+                                Chassis: @Model.ChassisNo<br />
+
+                                <hr />
+
+                                <h4><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Odometer</span></h4>
+                                Mileage: @Model.Milage<br />
+                                Hubo: @Model.Hubo<br />
+                                RUC: @Model.RUC
+                                <hr />
+                                <h4><span style="letter-spacing: 1px; font-weight: 700; text-transform: uppercase">Registration and Licence</span></h4>
+
+                                Plate: @Model.PlateNo <br />
+                                Customer: @Model.FirstName @Model.LastName<br />
+                                Address: @Model.Address1 @Model.Address2 @Model.Address3<br />
+                                Contact: @Model.Mobile / @Model.Phone <br />
+                                Email: @Model.Email<br />
+
+                                WOF Expiry Date: @Model.WOFExpiryDate<br />
+                                REGO Expiry Date: @Model.RegoExpiryDate <br />
+                                <hr />
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="tab2">
+                        <div class="card-body">
+                            @Html.Action("DetailJobList")
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane fade" id="tab3">
+                        <div class="card-body">
+                            @Html.Action("DetailInvoiceList")
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>

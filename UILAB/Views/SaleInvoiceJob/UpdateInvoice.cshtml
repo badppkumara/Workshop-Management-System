@@ -1,0 +1,154 @@
+﻿@model UILAB.Models.SalesInvoiceListTR
+@{
+    ViewBag.Title = "UpdateInvoice ";
+    Layout = null;
+}
+
+<script type="text/javascript">
+    var flag = "@TempData["ErrorMessage"]";
+    if (flag == "") {
+        $("#errorMsg").hide();
+    }
+    else {
+        $("#errorMsg").show();
+    }
+</script>
+
+<script type="text/javascript">
+    var flag = "@TempData["Success"]";
+    var flag2 = "@TempData["Deleted"]";
+    var flag3 = "@TempData["Updated"]";
+
+    if (flag == "Success") {
+        toastr.success('Success!... Item Created')
+    }
+
+    if (flag2 == "Deleted") {
+        toastr.error('Success!... Item Deleted')
+    }
+
+    if (flag3 == "Updated") {
+        toastr.success('Success!... Item Updated')
+    }
+
+</script>
+
+
+
+@using (Html.BeginForm("UpdateInvoice", "SaleInvoiceJob", FormMethod.Post, new { @id = "CreateFormID", onsubmit = "return SubmitForm(this)", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+    <div class="row">
+        <div class="demo-form-wrapper">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.InvoiceID)
+
+            <div class="form-group form-group-sm">
+                <input type="text" class="form-control" value="@TempData["invoiceno"]" disabled="disabled" />
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group form-group-sm">
+                        <label>Repair Description </label>
+                        <textarea id="repairnote" class="form-control" rows="2" name="repairnote">@TempData["repairnote"]</textarea>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group form-group-sm">
+                        <label>Repair Amount </label>
+                        <input type="text" id="repair" placeholder="" name="repair" class="form-control" value="@TempData["repair"]"
+                               data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group form-group-sm">
+                        <label>Parts Description </label>
+                        <textarea id="partnote" class="form-control" rows="2" name="partnote">@TempData["partnote"]</textarea>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group form-group-sm">
+                        <label>Parts Amount </label>
+                        <input type="text" id="partamount" placeholder="" name="partamount" class="form-control" value="@TempData["partamount"]"
+                               data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group form-group-sm">
+                        <label>Material Description </label>
+                        <textarea id="materialnote" class="form-control" rows="2" name="materialnote">@TempData["materialnote"]</textarea>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group form-group-sm">
+                        <label>Material Amount </label>
+                        <input type="text" id="material" placeholder="" name="material" class="form-control" value="@TempData["material"]"
+                               data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group form-group-sm">
+                        <label>Miscellaneous Description </label>
+                        <textarea id="miscellnote" class="form-control" rows="2" name="miscellnote">@TempData["miscellnote"]</textarea>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group form-group-sm">
+                        <label>Miscellaneous Amount </label>
+                        <input type="text" id="miscellamount" placeholder="" name="miscellamount" class="form-control" value="@TempData["miscellamount"]"
+                               data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group form-group-sm">
+                        <label>Freight Amount</label>
+                        <input type="text" id="freight" placeholder="" name="freight" class="form-control" value="@TempData["freight"]"
+                               data-inputmask="'alias': 'numeric', 'autoGroup': true, 'prefix': ' ', 'placeholder': '0'" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group form-group-sm">
+                        <label>Status </label>
+                        @Html.DropDownListFor(model => model.StatusID, ViewBag.statuslist as SelectList, "--- Select Status ---", new { @class = "form-control", @id = "status" })
+                        @Html.ValidationMessageFor(model => model.StatusID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group form-group-sm">
+                        <label>Due Date </label>
+                        <div class="input-with-icon">
+                            <input id="duedate" name="duedate" class="form-control" type="text" data-provide="datepicker" data-date-autoclose="true" data-date-format="dd-mm-yyyy"
+                                   data-date-today-highlight="true" autocomplete="off" value="@TempData["duedate"]">
+                            <span class="icon icon-calendar input-icon"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Update Invoice" class="btn btn-primary btn-block" id="btnAdd" name="btnAdd" />
+                @*<button class="btn btn-primary btn-block btn-next" type="button">Continue</button>*@
+            </div>
+
+        </div>
+    </div>
+
+}
+
