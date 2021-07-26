@@ -48,7 +48,7 @@ namespace UILAB.Controllers.Approvals
                 var scheme = (from data in db.ApprovalSchemeMasters where data.SegmentID == _Segment orderby data.SchemeName ascending select data).ToList();
                 ViewBag.SchemeList = new SelectList(scheme, "ApprovalSchemeID", "SchemeName");
 
-                var employee = (from data in db.vw_EmployeeMasters where data.SegmentID == _Segment orderby data.FullName ascending select data).ToList();
+                var employee = (from data in db.vw_EmployeeTB where data.SegmentID == _Segment orderby data.FullName ascending select data).ToList();
                 ViewBag.EmployeeList = new SelectList(employee, "EmployeeNo", "FullName");
 
                 return View();
@@ -129,7 +129,7 @@ namespace UILAB.Controllers.Approvals
                     var scheme = (from data in db.ApprovalSchemeMasters where data.SegmentID == _Segment orderby data.SchemeName ascending select data).ToList();
                     ViewBag.SchemeList = new SelectList(scheme, "ApprovalSchemeID", "SchemeName");
 
-                    var employee = (from data in db.vw_EmployeeMasters where data.SegmentID == _Segment orderby data.FullName ascending select data).ToList();
+                    var employee = (from data in db.vw_EmployeeTB where data.SegmentID == _Segment orderby data.FullName ascending select data).ToList();
                     ViewBag.EmployeeList = new SelectList(employee, "EmployeeNo", "FullName");
 
                     return View(db.ApprovalGroups.Where(x => x.ApprovalGroupID == id).FirstOrDefault<ApprovalGroupTR>());

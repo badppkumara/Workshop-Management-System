@@ -516,7 +516,7 @@ namespace UILAB.Controllers.Crm
 
             using (var db = new DatabaseContext())
             {
-                var result = db.vw_EmployeeMasters.SingleOrDefault(b => b.EmployeeNo == id);
+                var result = db.vw_EmployeeTB.SingleOrDefault(b => b.EmployeeNo == id);
 
                 if (result == null)
                 {
@@ -526,7 +526,7 @@ namespace UILAB.Controllers.Crm
                 {
                     TempData["username"] = result.UserName;
                     TempData["fullname"] = result.FullName;
-                    return View(db.vw_EmployeeMasters.Where(x => x.EmployeeNo == id).FirstOrDefault<vw_EmployeeMaster>());
+                    return View(db.vw_EmployeeTB.Where(x => x.EmployeeNo == id).FirstOrDefault<vw_EmployeeTB>());
                 }
             }
         }
@@ -548,7 +548,7 @@ namespace UILAB.Controllers.Crm
                 else
                 {
                     TempData["username"] = result.UserName;
-                    return View(db.vw_EmployeeMasters.Where(x => x.EmployeeNo == id).FirstOrDefault<vw_EmployeeMaster>());
+                    return View(db.vw_EmployeeTB.Where(x => x.EmployeeNo == id).FirstOrDefault<vw_EmployeeTB>());
                 }
             }
         }
@@ -570,7 +570,7 @@ namespace UILAB.Controllers.Crm
                 else
                 {
                     TempData["username"] = result.UserName;
-                    return View(db.vw_EmployeeMasters.Where(x => x.EmployeeNo == id).FirstOrDefault<vw_EmployeeMaster>());
+                    return View(db.vw_EmployeeTB.Where(x => x.EmployeeNo == id).FirstOrDefault<vw_EmployeeTB>());
                 }
             }
         }

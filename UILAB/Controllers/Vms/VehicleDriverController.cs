@@ -43,7 +43,7 @@ namespace UILAB.Controllers.Vms
 
                 using (var db = new DatabaseContext())
                 {
-                    var employee = (from data in db.vw_EmployeeMasters orderby data.FullName ascending select data).ToList();
+                    var employee = (from data in db.vw_EmployeeTB orderby data.FullName ascending select data).ToList();
                     ViewBag.EmpList = new SelectList(employee, "EmployeeNo", "FullName");
 
                     var gender = (from data in db.GenderMasters orderby data.Gender ascending select data).ToList();
@@ -63,7 +63,7 @@ namespace UILAB.Controllers.Vms
                     ViewBag.SubmitHeader = "Update Driver";
                     TempData["buttonMsg"] = "ClearButton";
 
-                    var employee = (from data in db.vw_EmployeeMasters orderby data.FullName ascending select data).ToList();
+                    var employee = (from data in db.vw_EmployeeTB orderby data.FullName ascending select data).ToList();
                     ViewBag.EmpList = new SelectList(employee, "EmployeeNo", "FullName");
 
                     var gender = (from data in db.GenderMasters orderby data.Gender ascending select data).ToList();

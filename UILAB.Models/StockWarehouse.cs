@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace UILAB.Models
 {
-    [Table("StockWarehouseTB")]
-    public class StockWarehouseTB
+    [Table("StockWarehouse")]
+    public class StockWarehouse
     {
         public Nullable<int> SegmentID { get; set; }
 

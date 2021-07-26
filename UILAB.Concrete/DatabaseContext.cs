@@ -67,7 +67,7 @@ namespace UILAB.Concrete
         public virtual DbSet<StockTR> StockTRs { get; set; }
         public virtual DbSet<StockSubTypeTB> StockSubTypes { get; set; }
         public virtual DbSet<StockTypeTB> StockTypes { get; set; }
-        public virtual DbSet<StockWarehouseTB> StockWarehouses { get; set; }
+        public virtual DbSet<StockWarehouse> StockWarehouses { get; set; }
         public virtual DbSet<StockUnitTB> StockUnits { get; set; }
         public virtual DbSet<SupplierTB> Suppliers { get; set; }
         public virtual DbSet<UserRoles> UserRole { get; set; }
@@ -83,7 +83,7 @@ namespace UILAB.Concrete
 
         // -----------------------  Views -------------------------------------
         public virtual DbSet<vw_ApprovalGroupTR> vw_ApprovalGroupTRs { get; set; }
-        public virtual DbSet<vw_EmployeeMaster> vw_EmployeeMasters { get; set; }
+        public virtual DbSet<vw_EmployeeTB> vw_EmployeeTB { get; set; }
         public virtual DbSet<vw_ResourceTR> vw_ResourceTRs { get; set; }
         public virtual DbSet<vw_UserSecurity> vw_UserSecurities { get; set; }
         public virtual DbSet<vw_VehicleTR> vw_VehicleTRs { get; set; }

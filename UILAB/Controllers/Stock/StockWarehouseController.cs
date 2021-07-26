@@ -13,7 +13,7 @@ namespace UILAB.Controllers.Stock
     [ValidateAdminSession]
     public class StockWarehouseController : Controller
     {
-        StockWarehouseTB objstockwarehouse = new StockWarehouseTB();
+        StockWarehouse objstockwarehouse = new StockWarehouse();
         IStock _IStock;
 
         public StockWarehouseController()
@@ -60,14 +60,14 @@ namespace UILAB.Controllers.Stock
                     ViewBag.SubmitHeader = "Update";
                     TempData["buttonMsg"] = "ClearButton";
 
-                    return View(db.StockWarehouses.Where(x => x.WarehouseID == id).FirstOrDefault<StockWarehouseTB>());
+                    return View(db.StockWarehouses.Where(x => x.WarehouseID == id).FirstOrDefault<StockWarehouse>());
                 }
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(StockWarehouseTB item)
+        public ActionResult Create(StockWarehouse item)
         {
             int _Segment = Convert.ToInt32(HttpContext.Session["Segment"]);
             int _User = Convert.ToInt32(HttpContext.Session["AdminUser"]);

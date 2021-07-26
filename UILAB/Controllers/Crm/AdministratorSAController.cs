@@ -48,7 +48,7 @@ namespace UILAB.Controllers.Crm
 
             using (var db = new DatabaseContext())
             {
-                var user = (from data in db.vw_EmployeeMasters where data.SegmentID == _Segment orderby data.FullName ascending select data).ToList();
+                var user = (from data in db.vw_EmployeeTB where data.SegmentID == _Segment orderby data.FullName ascending select data).ToList();
                 ViewBag.EmployeeList = new SelectList(user, "EmployeeNo", "FullName");
 
                 return View();
@@ -129,7 +129,7 @@ namespace UILAB.Controllers.Crm
                 {
                     TempData["user"] = _User;
 
-                    var employee = (from data in db.vw_EmployeeMasters where data.SegmentID == _Segment orderby data.FullName ascending select data).ToList();
+                    var employee = (from data in db.vw_EmployeeTB where data.SegmentID == _Segment orderby data.FullName ascending select data).ToList();
                     ViewBag.EmployeeList = new SelectList(employee, "EmployeeNo", "FullName");
 
                     return View(db.UserSecurities.Where(x => x.UserID == id).FirstOrDefault<UserSecurity>());

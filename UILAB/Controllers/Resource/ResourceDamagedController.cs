@@ -48,7 +48,7 @@ namespace UILAB.Controllers.Resource
                 var resource = (from data in db.ResourceTRs where data.SegmentID == _Segment && data.AssignedID == -1 orderby data.Resource ascending select data).ToList();
                 ViewBag.ResourceList = new SelectList(resource, "ResourceID", "Resource");
 
-                var user = (from data in db.vw_EmployeeMasters where data.SegmentID == _Segment orderby data.FullName ascending select data).ToList();
+                var user = (from data in db.vw_EmployeeTB where data.SegmentID == _Segment orderby data.FullName ascending select data).ToList();
                 ViewBag.ResourceList = new SelectList(user, "EmployeeNo", "FullName");
 
                 return View();
@@ -110,7 +110,7 @@ namespace UILAB.Controllers.Resource
                     var resource = (from data in db.ResourceTRs where data.SegmentID == _Segment && data.AssignedID == -1 orderby data.Resource ascending select data).ToList();
                     ViewBag.ResourceList = new SelectList(resource, "ResourceID", "Resource");
 
-                    var user = (from data in db.vw_EmployeeMasters where data.SegmentID == _Segment orderby data.FullName ascending select data).ToList();
+                    var user = (from data in db.vw_EmployeeTB where data.SegmentID == _Segment orderby data.FullName ascending select data).ToList();
                     ViewBag.ResourceList = new SelectList(user, "EmployeeNo", "FullName");
 
                     return View(db.ResourceUserTRs.Where(x => x.AssignedID == id).FirstOrDefault<ResourceUserTR>());

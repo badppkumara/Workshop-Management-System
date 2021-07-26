@@ -105,7 +105,7 @@
     <Compile Include="VehicleTransTypeTB.cs" />
     <Compile Include="VehicleTypeTB.cs" />
     <Compile Include="VehicleMakeTB.cs" />
-    <Compile Include="vw_EmployeeMaster.cs" />
+    <Compile Include="vw_EmployeeTB.cs" />
     <Compile Include="vw_JobAssignEmpTR.cs" />
     <Compile Include="vw_JobTaskPartDetailTmpTR.cs" />
     <Compile Include="vw_JobTaskPartDetailTR.cs" />
@@ -118,7 +118,7 @@
     <Compile Include="vw_ApprovalGroupTR.cs" />
     <Compile Include="vw_VehicleTR.cs" />
     <Compile Include="vw_UserSecurity.cs" />
-    <Compile Include="StockWarehouseTB.cs" />
+    <Compile Include="StockWarehouse.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

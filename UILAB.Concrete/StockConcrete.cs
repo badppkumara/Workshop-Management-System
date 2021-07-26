@@ -120,7 +120,7 @@ namespace UILAB.Concrete
         }
 
         // Warehouse
-        public int InsertWarehouse(StockWarehouseTB warehousetb)
+        public int InsertWarehouse(StockWarehouse warehousetb)
         {
             try
             {
@@ -138,7 +138,7 @@ namespace UILAB.Concrete
             }
         }
 
-        public void UpdateWarehouse(StockWarehouseTB warehousetb)
+        public void UpdateWarehouse(StockWarehouse warehousetb)
         {
             using (var _context = new DatabaseContext())
             {

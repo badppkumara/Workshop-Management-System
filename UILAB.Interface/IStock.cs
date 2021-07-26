@@ -20,8 +20,8 @@ namespace UILAB.Interface
         int DeleteSubType(int subtypetb);
 
         // Warehouse
-        int InsertWarehouse(StockWarehouseTB warehousetb);
-        void UpdateWarehouse(StockWarehouseTB warehousetb);
+        int InsertWarehouse(StockWarehouse warehousetb);
+        void UpdateWarehouse(StockWarehouse warehousetb);
         int DeleteWarehouse(int warehousetb);
 
         // Stock Brand

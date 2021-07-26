@@ -21,7 +21,7 @@ namespace UILAB.Controllers.Stock
         SupplierTB objsupplier = new SupplierTB();
         ApprovalHeaderTR objapprovalheader = new ApprovalHeaderTR();
         ApprovalDetailTR objapprovaldetail = new ApprovalDetailTR();
-        StockWarehouseTB objwarehouse = new StockWarehouseTB();
+        StockWarehouse objwarehouse = new StockWarehouse();
 
         IStock _IStock;
         IUser _IUser;

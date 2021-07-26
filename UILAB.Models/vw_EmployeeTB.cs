@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace UILAB.Models
 {
-    [Table("vw_EmployeeMaster")]
-    public class vw_EmployeeMaster
+    [Table("vw_EmployeeTB")]
+    public class vw_EmployeeTB
     {
         public string FullName { get; set; }
         [Key]

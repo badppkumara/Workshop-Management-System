@@ -577,7 +577,7 @@
                                                     @{
                                                         using (var db = new DatabaseContext())
                                                         {
-                                                            var user = (from data in db.vw_EmployeeMasters orderby data.FullName ascending select data).ToList();
+                                                            var user = (from data in db.vw_EmployeeTB orderby data.FullName ascending select data).ToList();
 
                                                             foreach (var useritem in user)
                                                             {
